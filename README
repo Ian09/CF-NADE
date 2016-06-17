@@ -1,3 +1,17 @@
-The code for CF-NADE will be released soon (probably after the conference).
+Code for "A Neural Autoregressive Approach to Collaborative Filtering", ICML 2016
 
-Thanks!
+Dependency:
+
+You need to install:
+Theano: http://deeplearning.net/software/theano/
+blocks: http://blocks.readthedocs.io/en/latest/bricks_overview.html
+		version 0.1.1 is requred
+
+
+In this code, you can use the code in "datasets" to generate a hdf5 dataset to feed CF-NADE. 
+Then you can run "learner_ordinalcost_directly_itembased_newsoftmax_timing.py" to train and 
+test CF-NADE.
+
+And example to run the code is:
+
+MovieLens1M=/Users/yin.zheng/ml_datasets/MovieLens1M-shuffle-itembased-0 python learner_ordinalcost_directly_itembased_newsoftmax_timing.py 512 10 60 0.001 0.1 0.001 1e-8 500 tanh 0 0.02 Adam 0 1 0.995 /tmp/cfnade
