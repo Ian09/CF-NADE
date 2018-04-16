@@ -11,7 +11,8 @@ import numpy as np
 from blocks.bricks import Rectifier, Softmax, Identity, NDimensionalSoftmax, Tanh, Logistic, Softplus
 from blocks.initialization import Constant, Uniform
 from blocks.bricks import Initializable, Sequence, Feedforward, Linear, Brick
-from blocks.bricks import shared_floatx_nans, add_role
+from blocks.utils import shared_floatx_nans
+from blocks.roles import add_role
 from blocks.roles import WEIGHT, BIAS
 from blocks.bricks.base import application
 from toolz import interleave
@@ -713,7 +714,7 @@ if __name__ == '__main__':
     lr_tracer = []
     rate_score = np.array([1, 2, 3, 4, 5], np.float32)
     while(epoch < n_iter and nb_of_epocs_without_improvement < look_ahead):        
-        print 'Epoch {0}'.format(epoch)
+        print('Epoch {0}'.format(epoch))
         epoch += 1
         start_time_epoch = t.time()
         cost_train = []
@@ -753,10 +754,10 @@ if __name__ == '__main__':
         n_samples = np.array(n_sample_train).sum()
         train_RMSE = np.sqrt(squared_error_ / (n_samples * 1.0 + 1e-8))
         
-        print '\tTraining   ...',
-        print 'Train     :', "RMSE: {0:.6f}".format(train_RMSE), " Cost Error: {0:.6f}".format(cost_train), "Train Time: {0:.6f}".format(train_time), get_done_text(start_time_epoch)
+        print('\tTraining   ...', end=' ')
+        print('Train     :', "RMSE: {0:.6f}".format(train_RMSE), " Cost Error: {0:.6f}".format(cost_train), "Train Time: {0:.6f}".format(train_time), get_done_text(start_time_epoch))
         
-        print '\tValidating ...',
+        print('\tValidating ...', end=' ')
         start_time = t.time()
         squared_error_valid = []
         n_sample_valid = []
@@ -783,7 +784,7 @@ if __name__ == '__main__':
         squared_error_ = np.array(squared_error_valid).sum()
         n_samples = np.array(n_sample_valid).sum()
         valid_RMSE = np.sqrt(squared_error_ / (n_samples * 1.0 + 1e-8))
-        print 'Validation:', " RMSE: {0:.6f}".format(valid_RMSE) , "Valid Time: {0:.6f}".format(valid_time), get_done_text(start_time),
+        print('Validation:', " RMSE: {0:.6f}".format(valid_RMSE) , "Valid Time: {0:.6f}".format(valid_time), get_done_text(start_time), end=' ')
         if valid_RMSE < best_valid_error:
             best_epoch = epoch
             nb_of_epocs_without_improvement = 0
@@ -794,7 +795,7 @@ if __name__ == '__main__':
             
             best_model = cp.deepcopy(NADE_CF_model)
             best_polyak = cp.deepcopy(shared_polyak)
-            print '\n\n Got a good one'
+            print('\n\n Got a good one')
         else:
             nb_of_epocs_without_improvement += 1
             if Optimizer == 'Adadelta':
@@ -802,11 +803,11 @@ if __name__ == '__main__':
             elif nb_of_epocs_without_improvement == look_ahead and lr > 1e-5:
                 nb_of_epocs_without_improvement = 0
                 lr /= 4 
-                print "learning rate is now %s" % lr 
+                print("learning rate is now %s" % lr) 
         lr_tracer.append(lr)
                 
                 
-    print '\n### Training, n_layers=%d' % (len(hidden_size)), get_done_text(start_training_time)
+    print('\n### Training, n_layers=%d' % (len(hidden_size)), get_done_text(start_training_time))
     
     best_y = best_model.apply(input_ratings_cum)
     best_y_cum = T.extra_ops.cumsum(best_y, axis=2)
@@ -814,7 +815,7 @@ if __name__ == '__main__':
     f_monitor_best = theano.function(inputs=[input_ratings],
                                 outputs=[best_predicted_ratings])
     
-    print '\tTesting ...',
+    print('\tTesting ...', end=' ')
     start_time = t.time()
     squared_error_test = []
     n_sample_test = []
@@ -839,7 +840,7 @@ if __name__ == '__main__':
     squared_error_ = np.array(squared_error_test).sum()
     n_samples = np.array(n_sample_test).sum()
     test_RMSE = np.sqrt(squared_error_ / (n_samples * 1.0 + 1e-8))
-    print 'Test:', " RMSE: {0:.6f}".format(test_RMSE) , "Test Time: {0:.6f}".format(test_time), get_done_text(start_time),
+    print('Test:', " RMSE: {0:.6f}".format(test_RMSE) , "Test Time: {0:.6f}".format(test_time), get_done_text(start_time), end=' ')
     
     f = open(os.path.join(output_path, 'Reco_NADE_masked_directly_itembased.txt'), 'a')
     to_write = [str(test_RMSE), str(best_valid_error), str(best_epoch)] + sys.argv[:-1]
@@ -847,7 +848,7 @@ if __name__ == '__main__':
     f.write(line)
     f.close()
     
-    print '\tTesting with polyak parameters...',
+    print('\tTesting with polyak parameters...', end=' ')
     best_param_list = []
     [best_param_list.extend(p.parameters) for p in best_model.children]
     f_replace = polyak_replace(best_param_list, best_polyak)
@@ -883,7 +884,7 @@ if __name__ == '__main__':
     squared_error_ = np.array(squared_error_test).sum()
     n_samples = np.array(n_sample_test).sum()
     test_RMSE = np.sqrt(squared_error_ / (n_samples * 1.0 + 1e-8))
-    print 'Test:', " RMSE: {0:.6f}".format(test_RMSE) , "Test Time: {0:.6f}".format(test_time), get_done_text(start_time),
+    print('Test:', " RMSE: {0:.6f}".format(test_RMSE) , "Test Time: {0:.6f}".format(test_time), get_done_text(start_time), end=' ')
     
     f = open(os.path.join(output_path, 'Reco_NADE_masked_directly_itembased.txt'), 'a')
     to_write = [str(test_RMSE), str(best_valid_error), str(best_epoch)] + sys.argv[:-1] + ['polyak']
