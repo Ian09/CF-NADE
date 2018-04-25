@@ -4,7 +4,7 @@ Author: Dynsk
 Use case:
     myData = Data('../ml-1m/ratings.dat')
     myData.split_sets({'train': 0.9, 'test': 0.1})
-    myData.get_batch(512, 'train')  # batchSize * numberMovie * 2 * 2
+    myData.get_batch_new(512, 'train')  # (batchSize * numberMovie * 2, batchSize * 2)
 
     When run out of dataset, myData.get_batch() returns False
 """
@@ -28,10 +28,10 @@ class Data:
                     self.movieID2index[int(movieID)] = index
                     index += 1
 
-                if userID not in self.userList:
-                    self.userList[userID] = [(int(movieID), int(rating), int(timeStamp))]
-                else:
+                if userID in self.userList:
                     self.userList[userID].append((int(movieID), int(rating), int(timeStamp)))
+                else:
+                    self.userList[userID] = [(int(movieID), int(rating), int(timeStamp))]
 
         self.movieDim = len(self.movieID2index)
 
@@ -48,7 +48,7 @@ class Data:
                 # finalVector[:, :, :, 0] = inputVector
                 # finalVector[:, :, :, 1] = outputVector
                 # self.sampleList.append(finalVector)
-                self.sampleList.append((ratingsTriplesSorted[0 : splitPoint - 1], triple))
+                self.sampleList.append((ratingsTriplesSorted[0: splitPoint - 1], triple))
 
 
     def split_sets(self, name_portion_dict):
@@ -56,30 +56,48 @@ class Data:
         currentPos = 0
         for key in name_portion_dict:
             newPos = int(name_portion_dict[key] * self.sampleList.__len__() + currentPos)
-            self.splitDict[key] = self.sampleList[currentPos : newPos]
+            self.splitDict[key] = self.sampleList[currentPos: newPos]
             currentPos = newPos
 
-        rd.shuffle(self.sampleList)
 
     def triples2vector(self, triples):
         """transform (movieID, ratings, timStamp) triples to 1 * dim * 2 vector"""
         outputVector = np.zeros((1, self.movieDim, 2))
         for triple in triples:
-
-            outputVector[0, self.movieID2index[triple[0]], 0] = triple[1]
-
-            outputVector[0, self.movieID2index[triple[0]], 1] = triple[2]
-
-
+            outputVector[0, self.movieID2index[triple[0]], 0] = triple[1]  # adding rating
+            outputVector[0, self.movieID2index[triple[0]], 1] = triple[2]  # adding timeStamp
         return outputVector
 
     def dense2sparseVector(self, sampleSet):
+        """
+        :param sampleSet: a set contains two elements. The first one is a list of all triples of input, the other
+        is a triple of the corresponding output
+        :return:
+        """
         inputVector = self.triples2vector(sampleSet[0])
         outputVector = self.triples2vector((sampleSet[1]))
         finalVector = np.zeros((1, self.movieDim, 2, 2))
         finalVector[:, :, :, 0] = inputVector
         finalVector[:, :, :, 1] = outputVector
         return finalVector
+
+    def dense2sparseVector_new(self, sampleSet):
+        """
+        :param sampleSet: a set contains two elements. The first one is a list of all triples of input, the other
+        is a triple of the corresponding output
+        :return:
+        """
+        inputVector = self.triples2vector(sampleSet[0])
+        outputVector = np.zeros((1, 2), dtype=int)
+
+        movieID, rating, timeStamp = sampleSet[1]  # unpack output triple
+        inputVector[0, :, 1] = timeStamp - inputVector[0, :, 1]  # timeStamp difference
+        outputVector[0, 0] = rating
+        outputVector[0, 1] = self.movieID2index[movieID]
+        return (inputVector, outputVector)
+
+
+
 
     def get_batch(self, batchSize, setName):
         if len(self.splitDict[setName]) < batchSize:
@@ -93,6 +111,28 @@ class Data:
                 i -= 1
         return outputVector
 
+    def get_batch_new(self, batchSize, setName):
+        """
+        :param batchSize: usually 512
+        :param setName: 'train' or 'test'
+        :return: a tuple, containing batchSize * movie_dim * 2 matrix and a batchSize * 2 matrix
+
+        batchSize * movie_dim * 2: first dimension is for ratings and the second is for timestamp difference
+        batchSize * 2 matrix: first column is for ratings and the second column is for index of the movie
+        """
+        if len(self.splitDict[setName]) < batchSize:
+            return False
+        outputMatrix_input = np.zeros((batchSize, self.movieDim, 2), dtype=int)
+        outputMatrix_output = np.zeros((batchSize, 2), dtype=int)
+        for i in range(0, batchSize):
+            try:
+                sample = self.splitDict[setName].pop(0)
+                outputMatrix_input[i, :, :], outputMatrix_output[i, :] = self.dense2sparseVector_new(sample)
+            except:
+                i -= 1
+        print(outputMatrix_output)
+        return (outputMatrix_input, outputMatrix_output)
+
 
 
 
@@ -100,8 +140,8 @@ class Data:
 if __name__ == '__main__':
     myData = Data('../ml-1m/ratings.dat')
     myData.split_sets({'train': 0.9, 'test': 0.1})
-    print(myData.get_batch(512, 'train'))
-    print(myData.get_batch(512, 'train'))
-    print(myData.get_batch(512, 'train'))
+    myData.get_batch_new(512, 'train')
+    myData.get_batch_new(512, 'train')
+    myData.get_batch_new(512, 'train')
 
     print('Hello world!')
