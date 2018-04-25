@@ -1,0 +1,8 @@
+"""Output of Data.py"""
+
+(input_matrix, output_vector)
+
+where:
+  input_matrix: Batch_size * movie_dim * 2
+  output_vector: Batch_size
+
