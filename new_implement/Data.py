@@ -11,6 +11,16 @@ Use case:
 
 import random as rd
 import numpy as np
+import argparse
+import os
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--dataDir', type=str, default='../ml-1m/ratings.dat')
+parser.add_argument('--train', type=float, default=0.9)
+parser.add_argument('--test', type=float, default=0.1)
+parser.add_argument('--saveDir', type=str, default='./data')
+
+args = parser.parse_args()
 
 class Data:
 
@@ -37,17 +47,11 @@ class Data:
 
         for key in self.userList:
             #print('processing user:' + key)
+            
             ratingsTriples = self.userList[key]
-            """ratings before i would be trainset, exclusive, that is [0, i-1]"""
             splitPoint = rd.randint(1, len(ratingsTriples) - 1)
             ratingsTriplesSorted = sorted(ratingsTriples, key=lambda x: x[2])
-            # inputVector = self.triples2vector(ratingsTriplesSorted[0: splitPoint - 1])
-            for triple in ratingsTriplesSorted:
-                # outputVector = self.triples2vector([triple])
-                # finalVector = np.zeros((1, self.movieDim, 2, 2))
-                # finalVector[:, :, :, 0] = inputVector
-                # finalVector[:, :, :, 1] = outputVector
-                # self.sampleList.append(finalVector)
+            for triple in ratingsTriplesSorted[splitPoint:]:
                 self.sampleList.append((ratingsTriplesSorted[0: splitPoint - 1], triple))
 
 
@@ -68,18 +72,6 @@ class Data:
             outputVector[0, self.movieID2index[triple[0]], 1] = triple[2]  # adding timeStamp
         return outputVector
 
-    def dense2sparseVector(self, sampleSet):
-        """
-        :param sampleSet: a set contains two elements. The first one is a list of all triples of input, the other
-        is a triple of the corresponding output
-        :return:
-        """
-        inputVector = self.triples2vector(sampleSet[0])
-        outputVector = self.triples2vector((sampleSet[1]))
-        finalVector = np.zeros((1, self.movieDim, 2, 2))
-        finalVector[:, :, :, 0] = inputVector
-        finalVector[:, :, :, 1] = outputVector
-        return finalVector
 
     def dense2sparseVector_new(self, sampleSet):
         """
@@ -96,20 +88,21 @@ class Data:
         outputVector[0, 1] = self.movieID2index[movieID]
         return (inputVector, outputVector)
 
+    def prepareData(self, saveDir):
+        self.train_X = np.zeros((len(self.splitDict['train']), self.movieDim, 2))
+        self.train_Y = np.zeros((len(self.splitDict['train']), 2))
+        self.test_X = np.zeros((len(self.splitDict['test']), self.movieDim, 2))
+        self.test_Y = np.zeros((len(self.splitDict['test']), 2))
+        print(len(self.splitDict['test']))
+        for i in range(len(self.splitDict['train'])):
+            self.train_X[i,:,:], self.train_Y[i,:] = self.dense2sparseVector_new(self.splitDict['train'][i])
+        for i in range(len(self.splitDict['test'])):
+            self.test_X[i,:,:], self.test_Y[i,:] = self.dense2sparseVector_new(self.splitDict['test'][i])
+        np.savetxt(os.path.join(saveDir, 'train_X.dat'), self.train_X, delimiter=',')
+        np.savetxt(os.path.join(saveDir, 'train_Y.dat'), self.train_Y, delimiter=',')
+        np.savetxt(os.path.join(saveDir, 'test_X.dat'), self.test_X, delimiter=',')
+        np.savetxt(os.path.join(saveDir, 'test_Y.dat'), self.test_Y, delimiter=',')
 
-
-
-    def get_batch(self, batchSize, setName):
-        if len(self.splitDict[setName]) < batchSize:
-            return False
-        outputVector = np.zeros((batchSize, self.movieDim, 2, 2))
-        for i in range(0, batchSize):
-            try:
-                sample = self.splitDict[setName].pop(0)
-                outputVector[i,:,:,:] = self.dense2sparseVector(sample)
-            except:
-                i -= 1
-        return outputVector
 
     def get_batch_new(self, batchSize, setName):
         """
@@ -138,10 +131,10 @@ class Data:
 
 
 if __name__ == '__main__':
-    myData = Data('../ml-1m/ratings.dat')
-    myData.split_sets({'train': 0.9, 'test': 0.1})
-    myData.get_batch_new(512, 'train')
-    myData.get_batch_new(512, 'train')
-    myData.get_batch_new(512, 'train')
+    myData = Data(args.dataDir)
+    myData.split_sets({'train': args.train, 'test': args.test})
+    if not os.path.exists(args.saveDir):
+        os.makedirs(args.saveDir)
+    myData.prepareData(args.saveDir)
 
-    print('Hello world!')
+
