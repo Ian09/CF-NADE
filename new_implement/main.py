@@ -36,7 +36,7 @@ def main():
 	X = data_transform(X, FLAGS)
 
 	run_config = tf.ConfigProto()
-  	run_config.gpu_options.allow_growth=True
+	run_config.gpu_options.allow_growth=True
 
 	with tf.Session(config=run_config) as sess:
 		cf_nade = CF_NADE(sess, FLAGS)
