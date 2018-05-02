@@ -36,7 +36,7 @@ class Data:
         self.movieDim = len(self.movieID2index)
 
         for key in self.userList:
-            print('processing user:' + key)
+            #print('processing user:' + key)
             ratingsTriples = self.userList[key]
             """ratings before i would be trainset, exclusive, that is [0, i-1]"""
             splitPoint = rd.randint(1, len(ratingsTriples) - 1)
@@ -130,7 +130,7 @@ class Data:
                 outputMatrix_input[i, :, :], outputMatrix_output[i, :] = self.dense2sparseVector_new(sample)
             except:
                 i -= 1
-        print(outputMatrix_output)
+        #print(outputMatrix_output)
         return (outputMatrix_input, outputMatrix_output)
 
 
