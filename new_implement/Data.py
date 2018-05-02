@@ -13,6 +13,7 @@ import random as rd
 import numpy as np
 import argparse
 import os
+from scipy.sparse import csr_matrix
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--dataDir', type=str, default='../ml-1m/ratings.dat')
@@ -45,9 +46,10 @@ class Data:
 
         self.movieDim = len(self.movieID2index)
 
+
         for key in self.userList:
             #print('processing user:' + key)
-            
+
             ratingsTriples = self.userList[key]
             splitPoint = rd.randint(1, len(ratingsTriples) - 1)
             ratingsTriplesSorted = sorted(ratingsTriples, key=lambda x: x[2])
@@ -89,19 +91,11 @@ class Data:
         return (inputVector, outputVector)
 
     def prepareData(self, saveDir):
-        self.train_X = np.zeros((len(self.splitDict['train']), self.movieDim, 2))
-        self.train_Y = np.zeros((len(self.splitDict['train']), 2))
-        self.test_X = np.zeros((len(self.splitDict['test']), self.movieDim, 2))
-        self.test_Y = np.zeros((len(self.splitDict['test']), 2))
-        print(len(self.splitDict['test']))
         for i in range(len(self.splitDict['train'])):
-            self.train_X[i,:,:], self.train_Y[i,:] = self.dense2sparseVector_new(self.splitDict['train'][i])
+            x, y = self.dense2sparseVector_new(self.splitDict['train'][i])
+
         for i in range(len(self.splitDict['test'])):
-            self.test_X[i,:,:], self.test_Y[i,:] = self.dense2sparseVector_new(self.splitDict['test'][i])
-        np.savetxt(os.path.join(saveDir, 'train_X.dat'), self.train_X, delimiter=',')
-        np.savetxt(os.path.join(saveDir, 'train_Y.dat'), self.train_Y, delimiter=',')
-        np.savetxt(os.path.join(saveDir, 'test_X.dat'), self.test_X, delimiter=',')
-        np.savetxt(os.path.join(saveDir, 'test_Y.dat'), self.test_Y, delimiter=',')
+            x, y = self.dense2sparseVector_new(self.splitDict['test'][i])
 
 
     def get_batch_new(self, batchSize, setName):
