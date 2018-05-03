@@ -4,9 +4,11 @@ Author: Dynsk
 Use case:
     myData = Data('../ml-1m/ratings.dat')
     myData.split_sets({'train': 0.9, 'test': 0.1})
-    myData.get_batch_new(512, 'train')  # (batchSize * numberMovie * 2, batchSize * 2)
+    myData.get_batch_new_2(512, 'train')  # (batchSize * numberMovie * 2, batchSize * 2)
 
-    When run out of dataset, myData.get_batch() returns False
+    When run out of dataset, myData.get_batch_new_2() returns False
+
+    If you want to begin a new epoch, myData.renew() and you could do the same thing as before
 """
 
 import random as rd
@@ -20,6 +22,7 @@ class Data:
         index = 0
         self.sampleList = []
         self.splitDict = {}
+        self.used_index = 0  # indicator for how much data is used
         with open(data_directory, 'r') as f:
             for line in f.readlines():
                 userID, movieID, rating, timeStamp = line.split('::')
@@ -41,13 +44,7 @@ class Data:
             """ratings before i would be trainset, exclusive, that is [0, i-1]"""
             splitPoint = rd.randint(1, len(ratingsTriples) - 1)
             ratingsTriplesSorted = sorted(ratingsTriples, key=lambda x: x[2])
-            # inputVector = self.triples2vector(ratingsTriplesSorted[0: splitPoint - 1])
-            for triple in ratingsTriplesSorted:
-                # outputVector = self.triples2vector([triple])
-                # finalVector = np.zeros((1, self.movieDim, 2, 2))
-                # finalVector[:, :, :, 0] = inputVector
-                # finalVector[:, :, :, 1] = outputVector
-                # self.sampleList.append(finalVector)
+            for triple in ratingsTriplesSorted[splitPoint:]:
                 self.sampleList.append((ratingsTriplesSorted[0: splitPoint - 1], triple))
 
 
@@ -100,6 +97,12 @@ class Data:
 
 
     def get_batch(self, batchSize, setName):
+        """
+        Aborted
+        :param batchSize:
+        :param setName:
+        :return:
+        """
         if len(self.splitDict[setName]) < batchSize:
             return False
         outputVector = np.zeros((batchSize, self.movieDim, 2, 2))
@@ -113,6 +116,7 @@ class Data:
 
     def get_batch_new(self, batchSize, setName):
         """
+        Aborted
         :param batchSize: usually 512
         :param setName: 'train' or 'test'
         :return: a tuple, containing batchSize * movie_dim * 2 matrix and a batchSize * 2 matrix
@@ -133,15 +137,49 @@ class Data:
         print(outputMatrix_output)
         return (outputMatrix_input, outputMatrix_output)
 
+    def get_batch_new_2(self, batchSize, setName):
+        """
+        Could use self.renew() to begin a new epoch
 
+        :param batchSize: usually 512
+        :param setName: 'train' or 'test'
+        :return: a tuple, containing batchSize * movie_dim * 2 matrix and a batchSize * 2 matrix
 
+        batchSize * movie_dim * 2: first dimension is for ratings and the second is for timestamp difference
+        batchSize * 2 matrix: first column is for ratings and the second column is for index of the movie
+        """
+        if len(self.splitDict[setName]) - self.used_index < batchSize:
+            return False
+        outputMatrix_input = np.zeros((batchSize, self.movieDim, 2), dtype=int)
+        outputMatrix_output = np.zeros((batchSize, 2), dtype=int)
+        for i in range(0, batchSize):
+            sample = self.splitDict[setName][self.used_index + i]
+            outputMatrix_input[i, :, :], outputMatrix_output[i, :] = self.dense2sparseVector_new(sample)
+        self.used_index += batchSize
+        return outputMatrix_input, outputMatrix_output
+
+    def renew(self):
+        self.used_index = 0
 
 
 if __name__ == '__main__':
     myData = Data('../ml-1m/ratings.dat')
     myData.split_sets({'train': 0.9, 'test': 0.1})
-    myData.get_batch_new(512, 'train')
-    myData.get_batch_new(512, 'train')
-    myData.get_batch_new(512, 'train')
+    index = 0
 
-    print('Hello world!')
+    while True:
+        flag = myData.get_batch_new_2(512, 'train')
+        if flag == False:
+            break
+        index += 1
+        print('batch: %d' % index)
+
+    myData.renew()
+
+    print('begin a new epoch')
+    while True:
+        flag = myData.get_batch_new_2(512, 'train')
+        if flag == False:
+            break
+        index += 1
+        print('batch: %d' % index)
