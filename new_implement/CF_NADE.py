@@ -50,8 +50,12 @@ class CF_NADE():
 		for iter_num_batch in range(flags.batch_size):
 			for iter_movie in range(flags.movie_dim):
 				if get_ratings[iter_num_batch,iter_movie] > 0:
-                    for fill_in_iter in range(int(get_ratings[iter_num_batch,iter_movie])):
-                        ratings_X[iter_num_batch,iter_movie,fill_in_iter] = self.time_stamp_function_exp(X[iter_num_batch,iter_movie,1], flags.time_transform_parameter)
+					for fill_in_iter in range(int(get_ratings[iter_num_batch,iter_movie])):
+						ratings_X[iter_num_batch,iter_movie,fill_in_iter]=self.time_stamp_function_exp(X[iter_num_batch,iter_movie,1],flags.time_transform_parameter)
+                        
+#				if get_ratings[iter_num_batch,iter_movie] > 0:
+#					ratings_X[iter_num_batch,iter_movie,int(get_ratings[iter_num_batch,iter_movie] - 1)] = time_stamp_function_exp(X[iter_num_batch,iter_movie,1],time_transform_parameter)
+		
 		return ratings_X
 
 	def time_stamp_function_exp(self, dif_time_stamp,time_transform_parameter):
