@@ -82,13 +82,11 @@ class CF_NADE():
 			print('fail to read checkpoints, begin to train....')
 
 		batch = 1
-		test_X, test_Y = myData.get_batch_new_2(512, 'test')
-		test_X = self.data_transform(test_X, flags)
 		for epoch in range(5):
 			print ('Epoch:', epoch)
 			while (True):
 				try:
-					X, Y = myData.get_batch_new_2(512, 'train')
+					X, Y = myData.get_batch_train(512)
 				except:
 					break
 				X = self.data_transform(X, flags)
@@ -98,10 +96,23 @@ class CF_NADE():
 				if (batch % 5 == 1):
 					myEval = self.sess.run(self.eval, feed_dict={self.X:X, self.Y:Y})
 					print ('eval:', myEval)
-				if (batch % 10 == 1):
-					myLoss = self.sess.run(self.loss_op, feed_dict={self.X:test_X, self.Y:test_Y})
-					print ('loss:', myLoss)
-			myData.renew()
+				if (batch % 100 == 1):
+					loss = []
+					count = 1
+					while(True):
+						if (count % 10) == 1:
+							print (count)
+						try:
+							test_X, test_Y = myData.get_batch_test(512)
+							test_X = self.data_transform(test_X, flags)
+							loss.append(self.sess.run([self.eval], feed_dict={self.X:test_X, self.Y:test_Y}))
+							count += 1
+						except:
+							break
+					print ('test eval:', np.mean(loss))
+					myData.renew_test()
+
+			myData.renew_train()
 			if not os.path.exists('./checkpoints'):
 				os.makedirs('./checkpoints')
 			saver.save(self.sess, './checkpoints/CF_NADE.model', global_step=batch)
