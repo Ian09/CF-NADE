@@ -19,8 +19,6 @@ class CF_NADE():
 		}
 
 	def buildGraph(self, flags):
-		#cumsum input_X
-		self.X = tf.cumsum(self.X[:,:,::-1], axis=2)[:,:,::-1]
 		#dim(self.H) = batch_size * hidden_dim
 		self.H = tf.tanh(tf.add(self.bias['b_hidden'],tf.tensordot(self.X, self.weights['W'], axes=[[1,2],[0,1]])))
 		#dim(self.output_layer) = batch_size * movie_dim * num_classes
@@ -31,8 +29,6 @@ class CF_NADE():
 		self.one_hot = tf.tile(self.one_hot, [1,1,flags.num_classes])
 		#dim(self.output_layer) = batch_size * num_classes
 		self.output_layer = tf.reduce_sum(self.output_layer * self.one_hot, axis=1)
-		#cumsum logits
-		self.output_layer = tf.cumsum(self.output_layer[:,::-1], axis=1)
 
 		#calculate pred_scores
 		self.output_layter = tf.cumsum(self.output_layer,axis=1)   #Cumsum for output_layer
@@ -61,7 +57,7 @@ class CF_NADE():
 					ratings_X[iter_num_batch,iter_movie,int(get_ratings[iter_num_batch,iter_movie] - 1)] = self.time_stamp_function_exp(X[iter_num_batch,iter_movie,1],flags.time_transform_parameter)
 
                     
-		cum_ratings_X = np.cumsum(ratings_X,axis = 2)  #Cumsum for rating_X,not inversed!                 
+		cum_ratings_X = np.cumsum(ratings_X[:,:,::-1],axis = 2)[:,:,::-1]  #Cumsum for rating_X,not inversed!                 
 		return cum_ratings_X
 
 	def time_stamp_function_exp(self, dif_time_stamp,time_transform_parameter):
@@ -105,6 +101,6 @@ class CF_NADE():
 			myData.renew()
 			if not os.path.exists('./checkpoints'):
 				os.makedirs('./checkpoints')
-			saver.save(sess, './checkpoints/CF_NADE.model', global_step=batch)
+			saver.save(self.sess, './checkpoints/CF_NADE.model', global_step=batch)
 
     
