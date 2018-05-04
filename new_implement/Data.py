@@ -22,7 +22,9 @@ class Data:
         index = 0
         self.sampleList = []
         self.splitDict = {}
-        self.used_index = 0  # indicator for how much data is used
+        self.used_index_train = 0  # indicator for how much data is used
+        self.used_index_test = 0
+
         with open(data_directory, 'r') as f:
             for line in f.readlines():
                 userID, movieID, rating, timeStamp = line.split('::')
@@ -159,8 +161,33 @@ class Data:
         self.used_index += batchSize
         return outputMatrix_input, outputMatrix_output
 
-    def renew(self):
-        self.used_index = 0
+    def get_batch_train(self, batch_size):
+        if len(self.splitDict['train']) - self.used_index_train < batch_size:
+            return False
+        outputMatrix_input = np.zeros((batch_size, self.movieDim, 2), dtype=int)
+        outputMatrix_output = np.zeros((batch_size, 2), dtype=int)
+        for i in range(0, batch_size):
+            sample = self.splitDict['train'][self.used_index_train + i]
+            outputMatrix_input[i, :, :], outputMatrix_output[i, :] = self.dense2sparseVector_new(sample)
+        self.used_index_train += batch_size
+        return outputMatrix_input, outputMatrix_output
+
+    def get_batch_test(self, batch_size):
+        if len(self.splitDict['test']) - self.used_index_test < batch_size:
+            return False
+        outputMatrix_input = np.zeros((batch_size, self.movieDim, 2), dtype=int)
+        outputMatrix_output = np.zeros((batch_size, 2), dtype=int)
+        for i in range(0, batch_size):
+            sample = self.splitDict['test'][self.used_index_test + i]
+            outputMatrix_input[i, :, :], outputMatrix_output[i, :] = self.dense2sparseVector_new(sample)
+        self.used_index_test += batch_size
+        return outputMatrix_input, outputMatrix_output
+
+    def renew_train(self):
+        self.used_index_train = 0
+
+    def renew_test(self):
+        self.used_index_test = 0
 
 
 if __name__ == '__main__':
