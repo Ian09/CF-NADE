@@ -45,6 +45,25 @@
     *　　　┗┻┛　┗┻┛ 
     *　　　
     */
+    
+    
+“”“    
+天灵灵，地灵灵，奉请祖师来显灵。
+
+祖师我来拜一拜，倾听小弟内心音。
+
+一请莱尊二进制，二请巴贝奇创雏形。
+
+三请艾达写算法，四请诺依曼模式新。
+
+五请阿兰俏图灵，六请里奇和汤普逊。
+
+七请网络三鼻祖，八请盖茨比广进金。
+
+九请理查推开源，十请林纳斯再更新。
+
+最后再请BAT，保佑代码靓又金！
+”“”
 
 
 New implementation on code for "A Neural Autoregressive Approach to Collaborative Filtering", ICML 2016
