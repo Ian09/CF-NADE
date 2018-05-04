@@ -21,26 +21,26 @@ class CF_NADE():
 	def buildGraph(self, flags):
 		#dim(self.H) = batch_size * hidden_dim
 		self.H = tf.tanh(tf.add(self.bias['b_hidden'],tf.tensordot(self.X, self.weights['W'], axes=[[1,2],[0,1]])))
-		#dim(self.output_layer) = batch_size * movie_dim * num_classes
+		#dim(self.output_layer) = batch_size * movie_dim * num_cl asses
 		self.output_layer = tf.add(self.bias['b_output'], tf.tensordot(self.H, self.weights['Output_W'], axes=[[1],[0]]))
 		#transform ouput_layer to dim=batch_size*num_classes
-		self.one_hot = tf.one_hot(self.Y[:,1], depth=flags.movie_dim)
-		self.one_hot = tf.expand_dims(self.one_hot, 2)
-		self.one_hot = tf.tile(self.one_hot, [1,1,flags.num_classes])
+		self.one_hot1 = tf.one_hot(self.Y[:,1], depth=flags.movie_dim)
+		self.one_hot2 = tf.expand_dims(self.one_hot, 2)
+		self.one_hot3 = tf.tile(self.one_hot, [1,1,flags.num_classes])
 		#dim(self.output_layer) = batch_size * num_classes
-		self.output_layer = tf.reduce_sum(self.output_layer * self.one_hot, axis=1)
+		self.output_layer2 = tf.reduce_sum(self.output_layer * self.one_hot3, axis=1)
 
 		#calculate pred_scores
-		self.output_layter = tf.cumsum(self.output_layer,axis=1)   #Cumsum for output_layer
-		self.scores_prob = tf.nn.softmax(self.output_layer, axis=1)
-		scores_matrix = np.repeat([[1,2,3,4,5]], flags.batch_size, axis=0)
-		scores_matrix = tf.convert_to_tensor(scores_matrix, tf.float32)
-		self.pred_scores = tf.reduce_sum(scores_matrix * self.scores_prob, axis=1)
+		self.output_layer3 = tf.cumsum(self.output_layer2,axis=1)   #Cumsum for output_layer
+		self.scores_prob = tf.nn.softmax(self.output_layer3, axis=1)
+		scores_matrix1 = np.repeat([[1,2,3,4,5]], flags.batch_size, axis=0)
+		scores_matrix2 = tf.convert_to_tensor(scores_matrix1, tf.float32)
+		self.pred_scores = tf.reduce_sum(scores_matrix2 * self.scores_prob, axis=1)
 
 		self.true_scores = self.Y[:, 0]
 		self.true_scores_onehot = tf.one_hot(self.true_scores - 1, depth=flags.num_classes)
 
-		self.loss_op = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=self.true_scores_onehot, logits=self.output_layer))
+		self.loss_op = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=self.true_scores_onehot, logits=self.output_layer3))
 		self.optimizer = tf.train.AdamOptimizer(learning_rate=flags.learning_rate)
 		self.train_op = self.optimizer.minimize(self.loss_op)
 
