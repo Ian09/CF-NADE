@@ -35,6 +35,7 @@ class CF_NADE():
 		self.output_layer = tf.cumsum(self.output_layer[:,::-1], axis=1)
 
 		#calculate pred_scores
+		self.output_layter = tf.cumsum(self.output_layer,axis=1)   #Cumsum for output_layer
 		self.scores_prob = tf.nn.softmax(self.output_layer, axis=1)
 		scores_matrix = np.repeat([[1,2,3,4,5]], flags.batch_size, axis=0)
 		scores_matrix = tf.convert_to_tensor(scores_matrix, tf.float32)
@@ -56,14 +57,12 @@ class CF_NADE():
 		ratings_X = np.zeros((flags.batch_size ,flags.movie_dim, flags.num_classes)) #num_classes:0,1,2,3,4 -> ratings:1,2,3,4,5
 		for iter_num_batch in range(flags.batch_size):
 			for iter_movie in range(flags.movie_dim):
-				#if get_ratings[iter_num_batch,iter_movie] > 0:
-					#for fill_in_iter in range(int(get_ratings[iter_num_batch,iter_movie])):
-					#	ratings_X[iter_num_batch,iter_movie,fill_in_iter]=self.time_stamp_function_exp(X[iter_num_batch,iter_movie,1],flags.time_transform_parameter)
-                        
 				if get_ratings[iter_num_batch,iter_movie] > 0:
 					ratings_X[iter_num_batch,iter_movie,int(get_ratings[iter_num_batch,iter_movie] - 1)] = self.time_stamp_function_exp(X[iter_num_batch,iter_movie,1],flags.time_transform_parameter)
-		
-		return ratings_X
+
+                    
+		cum_ratings_X = np.cumsum(ratings_X,axis = 2)  #Cumsum for rating_X,not inversed!                 
+		return cum_ratings_X
 
 	def time_stamp_function_exp(self, dif_time_stamp,time_transform_parameter):
 	    return np.exp(-abs(dif_time_stamp * time_transform_parameter))
