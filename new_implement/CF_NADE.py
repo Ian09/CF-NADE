@@ -25,8 +25,8 @@ class CF_NADE():
 		self.output_layer = tf.add(self.bias['b_output'], tf.tensordot(self.H, self.weights['Output_W'], axes=[[1],[0]]))
 		#transform ouput_layer to dim=batch_size*num_classes
 		self.one_hot1 = tf.one_hot(self.Y[:,1], depth=flags.movie_dim)
-		self.one_hot2 = tf.expand_dims(self.one_hot, 2)
-		self.one_hot3 = tf.tile(self.one_hot, [1,1,flags.num_classes])
+		self.one_hot2 = tf.expand_dims(self.one_hot1, 2)
+		self.one_hot3 = tf.tile(self.one_hot2, [1,1,flags.num_classes])
 		#dim(self.output_layer) = batch_size * num_classes
 		self.output_layer2 = tf.reduce_sum(self.output_layer * self.one_hot3, axis=1)
 
@@ -39,12 +39,15 @@ class CF_NADE():
 
 		self.true_scores = self.Y[:, 0]
 		self.true_scores_onehot = tf.one_hot(self.true_scores - 1, depth=flags.num_classes)
-
-		self.loss_op = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=self.true_scores_onehot, logits=self.output_layer3))
+		self.weight_L2 = tf.multiply(self.weights['W'],self.weights['W']);
+		self.loss_weights_L2 = tf.reduce_sum(self.weight_L2) 
+            
+		self.loss_op = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=self.true_scores_onehot, logits=self.output_layer3)) + flags.weight_decay * self.loss_weights_L2
+  
 		self.optimizer = tf.train.AdamOptimizer(learning_rate=flags.learning_rate)
 		self.train_op = self.optimizer.minimize(self.loss_op)
 
-		self.eval = tf.losses.mean_squared_error(labels=self.true_scores, predictions=self.pred_scores)
+		self.eval = tf.sqrt(tf.losses.mean_squared_error(labels=self.true_scores, predictions=self.pred_scores))
 		self.init = tf.global_variables_initializer()
 
 	def data_transform(self, X, flags):
