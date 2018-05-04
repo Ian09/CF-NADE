@@ -4,23 +4,15 @@ Author: Dynsk
 Use case:
     myData = Data('../ml-1m/ratings.dat')
     myData.split_sets({'train': 0.9, 'test': 0.1})
-    myData.get_batch_new(512, 'train')  # (batchSize * numberMovie * 2, batchSize * 2)
+    myData.get_batch_new_2(512, 'train')  # (batchSize * numberMovie * 2, batchSize * 2)
 
-    When run out of dataset, myData.get_batch() returns False
+    When run out of dataset, myData.get_batch_new_2() returns False
+
+    If you want to begin a new epoch, myData.renew() and you could do the same thing as before
 """
 
 import random as rd
 import numpy as np
-import argparse
-import os
-
-parser = argparse.ArgumentParser()
-parser.add_argument('--dataDir', type=str, default='../ml-1m/ratings.dat')
-parser.add_argument('--train', type=float, default=0.9)
-parser.add_argument('--test', type=float, default=0.1)
-parser.add_argument('--saveDir', type=str, default='./data')
-
-args = parser.parse_args()
 
 class Data:
 
@@ -30,6 +22,7 @@ class Data:
         index = 0
         self.sampleList = []
         self.splitDict = {}
+        self.used_index = 0  # indicator for how much data is used
         with open(data_directory, 'r') as f:
             for line in f.readlines():
                 userID, movieID, rating, timeStamp = line.split('::')
@@ -46,7 +39,9 @@ class Data:
         self.movieDim = len(self.movieID2index)
 
         for key in self.userList:
+            print('processing user:' + key)
             ratingsTriples = self.userList[key]
+            """ratings before i would be trainset, exclusive, that is [0, i-1]"""
             splitPoint = rd.randint(1, len(ratingsTriples) - 1)
             ratingsTriplesSorted = sorted(ratingsTriples, key=lambda x: x[2])
             for triple in ratingsTriplesSorted[splitPoint:]:
@@ -70,6 +65,18 @@ class Data:
             outputVector[0, self.movieID2index[triple[0]], 1] = triple[2]  # adding timeStamp
         return outputVector
 
+    def dense2sparseVector(self, sampleSet):
+        """
+        :param sampleSet: a set contains two elements. The first one is a list of all triples of input, the other
+        is a triple of the corresponding output
+        :return:
+        """
+        inputVector = self.triples2vector(sampleSet[0])
+        outputVector = self.triples2vector((sampleSet[1]))
+        finalVector = np.zeros((1, self.movieDim, 2, 2))
+        finalVector[:, :, :, 0] = inputVector
+        finalVector[:, :, :, 1] = outputVector
+        return finalVector
 
     def dense2sparseVector_new(self, sampleSet):
         """
@@ -86,24 +93,30 @@ class Data:
         outputVector[0, 1] = self.movieID2index[movieID]
         return (inputVector, outputVector)
 
-    def prepareData(self, saveDir):
-        self.train_X = np.zeros((len(self.splitDict['train']), self.movieDim, 2))
-        self.train_Y = np.zeros((len(self.splitDict['train']), 2))
-        self.test_X = np.zeros((len(self.splitDict['test']), self.movieDim, 2))
-        self.test_Y = np.zeros((len(self.splitDict['test']), 2))
-        print(len(self.splitDict['test']))
-        for i in range(len(self.splitDict['train'])):
-            self.train_X[i,:,:], self.train_Y[i,:] = self.dense2sparseVector_new(self.splitDict['train'][i])
-        for i in range(len(self.splitDict['test'])):
-            self.test_X[i,:,:], self.test_Y[i,:] = self.dense2sparseVector_new(self.splitDict['test'][i])
-        np.savetxt(os.path.join(saveDir, 'train_X.dat'), self.train_X, delimiter=',')
-        np.savetxt(os.path.join(saveDir, 'train_Y.dat'), self.train_Y, delimiter=',')
-        np.savetxt(os.path.join(saveDir, 'test_X.dat'), self.test_X, delimiter=',')
-        np.savetxt(os.path.join(saveDir, 'test_Y.dat'), self.test_Y, delimiter=',')
 
+
+
+    def get_batch(self, batchSize, setName):
+        """
+        Aborted
+        :param batchSize:
+        :param setName:
+        :return:
+        """
+        if len(self.splitDict[setName]) < batchSize:
+            return False
+        outputVector = np.zeros((batchSize, self.movieDim, 2, 2))
+        for i in range(0, batchSize):
+            try:
+                sample = self.splitDict[setName].pop(0)
+                outputVector[i,:,:,:] = self.dense2sparseVector(sample)
+            except:
+                i -= 1
+        return outputVector
 
     def get_batch_new(self, batchSize, setName):
         """
+        Aborted
         :param batchSize: usually 512
         :param setName: 'train' or 'test'
         :return: a tuple, containing batchSize * movie_dim * 2 matrix and a batchSize * 2 matrix
@@ -121,18 +134,52 @@ class Data:
                 outputMatrix_input[i, :, :], outputMatrix_output[i, :] = self.dense2sparseVector_new(sample)
             except:
                 i -= 1
-        #print(outputMatrix_output)
+        print(outputMatrix_output)
         return (outputMatrix_input, outputMatrix_output)
 
+    def get_batch_new_2(self, batchSize, setName):
+        """
+        Could use self.renew() to begin a new epoch
 
+        :param batchSize: usually 512
+        :param setName: 'train' or 'test'
+        :return: a tuple, containing batchSize * movie_dim * 2 matrix and a batchSize * 2 matrix
 
+        batchSize * movie_dim * 2: first dimension is for ratings and the second is for timestamp difference
+        batchSize * 2 matrix: first column is for ratings and the second column is for index of the movie
+        """
+        if len(self.splitDict[setName]) - self.used_index < batchSize:
+            return False
+        outputMatrix_input = np.zeros((batchSize, self.movieDim, 2), dtype=int)
+        outputMatrix_output = np.zeros((batchSize, 2), dtype=int)
+        for i in range(0, batchSize):
+            sample = self.splitDict[setName][self.used_index + i]
+            outputMatrix_input[i, :, :], outputMatrix_output[i, :] = self.dense2sparseVector_new(sample)
+        self.used_index += batchSize
+        return outputMatrix_input, outputMatrix_output
+
+    def renew(self):
+        self.used_index = 0
 
 
 if __name__ == '__main__':
-    myData = Data(args.dataDir)
-    myData.split_sets({'train': args.train, 'test': args.test})
-    if not os.path.exists(args.saveDir):
-        os.makedirs(args.saveDir)
-    myData.prepareData(args.saveDir)
+    myData = Data('../ml-1m/ratings.dat')
+    myData.split_sets({'train': 0.9, 'test': 0.1})
+    index = 0
 
+    while True:
+        flag = myData.get_batch_new_2(512, 'train')
+        if flag == False:
+            break
+        index += 1
+        print('batch: %d' % index)
 
+    myData.renew()
+
+    print('begin a new epoch')
+    while True:
+        flag = myData.get_batch_new_2(512, 'train')
+        if flag == False:
+            break
+        index += 1
+        print('batch: %d' % index)
