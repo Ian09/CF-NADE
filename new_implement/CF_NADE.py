@@ -19,6 +19,8 @@ class CF_NADE():
 		}
 
 	def buildGraph(self, flags):
+		#cumsum input_X
+		self.X = tf.cumsum(self.X[:,:,::-1], axis=2)[:,:,::-1]
 		#dim(self.H) = batch_size * hidden_dim
 		self.H = tf.tanh(tf.add(self.bias['b_hidden'],tf.tensordot(self.X, self.weights['W'], axes=[[1,2],[0,1]])))
 		#dim(self.output_layer) = batch_size * movie_dim * num_classes
@@ -29,6 +31,8 @@ class CF_NADE():
 		self.one_hot = tf.tile(self.one_hot, [1,1,flags.num_classes])
 		#dim(self.output_layer) = batch_size * num_classes
 		self.output_layer = tf.reduce_sum(self.output_layer * self.one_hot, axis=1)
+		#cumsum logits
+		self.output_layer = tf.cumsum(self.output_layer[:,::-1], axis=1)
 
 		#calculate pred_scores
 		self.scores_prob = tf.nn.softmax(self.output_layer, axis=1)
@@ -74,12 +78,14 @@ class CF_NADE():
 		ckpt = tf.train.get_checkpoint_state('./checkpoints/')
 		if ckpt and ckpt.model_checkpoint_path:
 			ckpt_name = os.path.basename(ckpt.model_checkpoint_path)
-			saver.restore(sess, os.path.join('./checkpoints', ckpt_name))
+			saver.restore(self.sess, os.path.join('./checkpoints', ckpt_name))
 			print("[*] Success to read {}".format(ckpt_name))
 		else:
 			print('fail to read checkpoints, begin to train....')
 
 		batch = 1
+		test_X, test_Y = myData.get_batch_new_2(512, 'test')
+		test_X = self.data_transform(test_X, flags)
 		for epoch in range(5):
 			print ('Epoch:', epoch)
 			while (True):
@@ -95,11 +101,11 @@ class CF_NADE():
 					myEval = self.sess.run(self.eval, feed_dict={self.X:X, self.Y:Y})
 					print ('eval:', myEval)
 				if (batch % 10 == 1):
-					myLoss = self.sess.run(self.loss_op, feed_dict={self.X:X, self.Y:Y})
+					myLoss = self.sess.run(self.loss_op, feed_dict={self.X:test_X, self.Y:test_Y})
 					print ('loss:', myLoss)
 			myData.renew()
-			if not os.path.exsits('./checkpoints'):
+			if not os.path.exists('./checkpoints'):
 				os.makedirs('./checkpoints')
-			saver.save(sess, './checkpoints/CF_NADE.model', global_step=count)
+			saver.save(sess, './checkpoints/CF_NADE.model', global_step=batch)
 
     
