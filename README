@@ -24,7 +24,29 @@
 //               佛祖保佑         永无BUG
 //
 //
-//
+
+/*code is far away from bug with the animal protecting
+    *  ┏┓　　　┏┓
+    *┏┛┻━━━┛┻┓
+    *┃　　　　　　　┃ 　
+    *┃　　　━　　　┃
+    *┃　┳┛　┗┳　┃
+    *┃　　　　　　　┃
+    *┃　　　┻　　　┃
+    *┃　　　　　　　┃
+    *┗━┓　　　┏━┛
+    *　　┃　　　┃神兽保佑
+    *　　┃　　　┃代码无BUG！
+    *　　┃　　　┗━━━┓
+    *　　┃　　　　　　　┣┓
+    *　　┃　　　　　　　┏┛
+    *　　┗┓┓┏━┳┓┏┛
+    *　　　┃┫┫　┃┫┫
+    *　　　┗┻┛　┗┻┛ 
+    *　　　
+    */
+
+
 New implementation on code for "A Neural Autoregressive Approach to Collaborative Filtering", ICML 2016
 
 See in /new_implement
