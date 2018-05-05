@@ -21,7 +21,7 @@ FLAGS = flags.FLAGS
 
 def main(_):
 	myData = Data('../ml-1m/ratings.dat')
-	myData.split_sets({'train': 0.9, 'test': 0.1})
+	myData.split_sets({'train': 0.95, 'test': 0.05})
 
 	run_config = tf.ConfigProto()
 	run_config.gpu_options.allow_growth=True

@@ -42,8 +42,8 @@ class CF_NADE():
 
 		self.loss_op = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=self.true_scores_onehot, logits=self.output_layer))
 		#regularization
-		self.loss_op += tf.sqrt(tf.reduce_sum(self.weights['W'] * self.weights['W']))
-		self.optimizer = tf.train.AdamOptimizer(learning_rate=flags.learning_rate, beta1=0.1, beta2=0.001)
+		self.loss_op += tf.reduce_sum(self.weights['W'] * self.weights['W']) * flags.weight_decay
+		self.optimizer = tf.train.AdamOptimizer(learning_rate=flags.learning_rate)
 		#self.optimizer = tf.train.AdamOptimizer(learning_rate=flags.learning_rate)
 		self.train_op = self.optimizer.minimize(self.loss_op)
 
@@ -94,18 +94,21 @@ class CF_NADE():
 				print (batch)
 				batch += 1
 				if (batch % 5 == 1):
-					myEval = self.sess.run(self.eval, feed_dict={self.X:X, self.Y:Y})
+					myEval = self.sess.run(self.eval, feed_dict={self.X:X, self.Y:Y})                
 					print ('eval:', myEval)
+					myLoss = self.sess.run(self.loss_op,feed_dict={self.X:X,self.Y:Y})
+					print ('Train Loss:',myLoss)
 				if (batch % 100 == 1):
 					loss = []
 					count = 1
 					while(True):
 						if (count % 10) == 1:
 							print (count)
+							print(loss[-10:-1]) 
 						try:
 							test_X, test_Y = myData.get_batch_test(512)
 							test_X = self.data_transform(test_X, flags)
-							loss.append(self.sess.run([self.eval], feed_dict={self.X:test_X, self.Y:test_Y}))
+							loss.append(self.sess.run([self.eval], feed_dict={self.X:test_X, self.Y:test_Y}))                          
 							count += 1
 						except:
 							break
