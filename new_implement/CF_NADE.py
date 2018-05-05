@@ -96,7 +96,7 @@ class CF_NADE():
 				if (batch % 5 == 1):
 					myEval = self.sess.run(self.eval, feed_dict={self.X:X, self.Y:Y})
 					print ('eval:', myEval)
-				if (batch % 100 == 1):
+				if (batch % 10 == 1):
 					loss = []
 					count = 1
 					while(True):
