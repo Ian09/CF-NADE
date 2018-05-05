@@ -31,7 +31,7 @@ class CF_NADE():
 		self.output_layer = tf.reduce_sum(self.output_layer * self.one_hot, axis=1)
 
 		#calculate pred_scores
-		self.output_layer = tf.cumsum(self.output_layer,axis=1)   #Cumsum for output_layer
+		#self.output_layer = tf.cumsum(self.output_layer,axis=1)   #Cumsum for output_layer
 		self.scores_prob = tf.nn.softmax(self.output_layer, axis=1)
 		scores_matrix = np.repeat([[1,2,3,4,5]], flags.batch_size, axis=0)
 		scores_matrix = tf.convert_to_tensor(scores_matrix, tf.float32)
@@ -42,7 +42,7 @@ class CF_NADE():
 
 		self.loss_op = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=self.true_scores_onehot, logits=self.output_layer))
 		#regularization
-		self.loss_op += tf.sqrt(tf.reduce_sum(self.weights['W'] * self.weights['W']))
+		self.loss_op += tf.sqrt(tf.reduce_mean(self.weights['W'] * self.weights['W']))
 		self.optimizer = tf.train.AdamOptimizer(learning_rate=flags.learning_rate, beta1=0.1, beta2=0.001)
 		#self.optimizer = tf.train.AdamOptimizer(learning_rate=flags.learning_rate)
 		self.train_op = self.optimizer.minimize(self.loss_op)
@@ -60,8 +60,9 @@ class CF_NADE():
 					ratings_X[iter_num_batch,iter_movie,int(get_ratings[iter_num_batch,iter_movie] - 1)] = self.time_stamp_function_exp(X[iter_num_batch,iter_movie,1],flags.time_transform_parameter)
 
                     
-		cum_ratings_X = np.cumsum(ratings_X[:,:,::-1],axis = 2)[:,:,::-1]  #Cumsum for rating_X,not inversed!                 
-		return cum_ratings_X
+		#cum_ratings_X = np.cumsum(ratings_X[:,:,::-1],axis = 2)[:,:,::-1]  #Cumsum for rating_X,not inversed!                 
+		#return cum_ratings_X
+		return ratings_X
 
 	def time_stamp_function_exp(self, dif_time_stamp,time_transform_parameter):
 	    return np.exp(-abs(dif_time_stamp * time_transform_parameter))
@@ -71,17 +72,18 @@ class CF_NADE():
 
 		self.sess.run(self.init)	
 
-		saver = tf.train.Saver()
-		print ('reading checkpoints....')
-		ckpt = tf.train.get_checkpoint_state('./checkpoints/')
-		if ckpt and ckpt.model_checkpoint_path:
-			ckpt_name = os.path.basename(ckpt.model_checkpoint_path)
-			saver.restore(self.sess, os.path.join('./checkpoints', ckpt_name))
-			print("[*] Success to read {}".format(ckpt_name))
-		else:
-			print('fail to read checkpoints, begin to train....')
+		# saver = tf.train.Saver()
+		# print ('reading checkpoints....')
+		# ckpt = tf.train.get_checkpoint_state('./checkpoints/')
+		# if ckpt and ckpt.model_checkpoint_path:
+		# 	ckpt_name = os.path.basename(ckpt.model_checkpoint_path)
+		# 	saver.restore(self.sess, os.path.join('./checkpoints', ckpt_name))
+		# 	print("[*] Success to read {}".format(ckpt_name))
+		# else:
+		# 	print('fail to read checkpoints, begin to train....')
 
 		batch = 1
+		log = open('result.dat', 'w')
 		for epoch in range(5):
 			print ('Epoch:', epoch)
 			while (True):
@@ -96,7 +98,7 @@ class CF_NADE():
 				if (batch % 5 == 1):
 					myEval = self.sess.run(self.eval, feed_dict={self.X:X, self.Y:Y})
 					print ('eval:', myEval)
-				if (batch % 10 == 1):
+				if (batch % 100 == 1):
 					loss = []
 					count = 1
 					while(True):
@@ -110,11 +112,12 @@ class CF_NADE():
 						except:
 							break
 					print ('test eval:', np.mean(loss))
+					log.write('test eval: %f' % np.mean(loss))
 					myData.renew_test()
 
 			myData.renew_train()
-			if not os.path.exists('./checkpoints'):
-				os.makedirs('./checkpoints')
-			saver.save(self.sess, './checkpoints/CF_NADE.model', global_step=batch)
+			# if not os.path.exists('./checkpoints'):
+			# 	os.makedirs('./checkpoints')
+			# saver.save(self.sess, './checkpoints/CF_NADE.model', global_step=batch)
 
     
