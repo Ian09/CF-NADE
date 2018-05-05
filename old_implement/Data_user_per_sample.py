@@ -90,9 +90,9 @@ class Data_user():
         out_mask = np.ones((batch_size, self.M), dtype=bool)
         in_mask = np.ones((batch_size, self.M), dtype=bool)
         for i in range(0, batch_size):
-            ratings[i] = self.all_records[self.index_list_test[i + self.used_train], :]
-            out_mask[i] = self.output_mask[self.index_list_test[i + self.used_train], :]
-            in_mask[i] = self.input_mask[self.index_list_test[i + self.used_train], :]
+            ratings[i] = self.all_records[self.index_list_test[i + self.used_test], :]
+            out_mask[i] = self.output_mask[self.index_list_test[i + self.used_test], :]
+            in_mask[i] = self.input_mask[self.index_list_test[i + self.used_test], :]
         self.used_test += batch_size
 
         return ratings, out_mask, in_mask, True
