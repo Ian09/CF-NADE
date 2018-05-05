@@ -44,6 +44,7 @@ class Data_user():
             self.all_records[i] = matrix_rating
             self.input_mask[i] = input_mask
             self.output_mask[i] = output_mask
+            i += 1
 
     def triples2vector(self, triples_input, triples_output):
         matrix_input = np.zeros((1, self.M))
@@ -118,20 +119,28 @@ if __name__ == '__main__':
     myData.split_set(0.9)
 
     index = 0
-    while True:
-        index += 1
-        print(index)
+    # while True:
+    #     index += 1
+    #     print(index)
+    #
+    #     r, i_m, o_m, flag = myData.get_batch_test(512)
+    #     if flag == False:
+    #         break
+    #
+    #
+    # myData.renew_test()
+    # while True:
+    #     index += 1
+    #     print(index)
+    #
+    #     r, i_m, o_m, flag = myData.get_batch_test(512)
+    #     if flag == False:
+    #         break
 
-        r, i_m, o_m, flag = myData.get_batch_train(512)
-        if flag == False:
-            break
+    x, input_m, output_m, flag = myData.get_batch_train(512)
+    test_x, _, _, _ = myData.get_batch_test(512)
 
-
-    myData.renew_train()
-    while True:
-        index += 1
-        print(index)
-
-        r, i_m, o_m, flag = myData.get_batch_train(512)
-        if flag == False:
-            break
+    print(x)
+    print(input_m)
+    print(output_m)
+    print(test_x)
