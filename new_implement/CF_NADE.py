@@ -99,6 +99,7 @@ class CF_NADE():
 					myLoss = self.sess.run(self.loss_op,feed_dict={self.X:X,self.Y:Y})
 					print ('Train Loss:',myLoss)
 				if (batch % 100 == 1):
+
 					loss = []
 					count = 1
 					while(True):
