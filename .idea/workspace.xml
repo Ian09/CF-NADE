@@ -20,12 +20,11 @@
       <file leaf-file-name="Data_user_per_sample.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/old_implement/Data_user_per_sample.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="390">
-              <caret line="153" lean-forward="true" selection-start-line="153" selection-end-line="153" />
+            <state relative-caret-position="282">
+              <caret line="60" column="34" lean-forward="true" selection-start-line="60" selection-start-column="34" selection-end-line="60" selection-end-column="34" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
                 <element signature="e#108#1221#0" />
-                <element signature="e#1260#2641#0" />
                 <element signature="e#2679#3615#0" />
                 <element signature="e#1981#2557#0" />
                 <element signature="e#4238#4595#0" />
@@ -360,7 +359,21 @@
       <option name="project" value="LOCAL" />
       <updated>1525630577477</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Data_user_per_sample.py: now split data into train, dev, test">
+      <created>1525636273832</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1525636273832</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Data_user_per_sample.py: add documents">
+      <created>1525636751113</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1525636751113</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -406,7 +419,9 @@
     <MESSAGE value="Data_user_per_sample.py: support shuffle when myData.renew_train()" />
     <MESSAGE value="Data_user_per_sample.py: roll back to no shuffle" />
     <MESSAGE value="Data_user_per_sample.py: add shuffle again, original slow implement" />
-    <option name="LAST_COMMIT_MESSAGE" value="Data_user_per_sample.py: add shuffle again, original slow implement" />
+    <MESSAGE value="Data_user_per_sample.py: now split data into train, dev, test" />
+    <MESSAGE value="Data_user_per_sample.py: add documents" />
+    <option name="LAST_COMMIT_MESSAGE" value="Data_user_per_sample.py: add documents" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -541,12 +556,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/old_implement/Data_user_per_sample.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="153" lean-forward="true" selection-start-line="153" selection-end-line="153" />
+        <state relative-caret-position="282">
+          <caret line="60" column="34" lean-forward="true" selection-start-line="60" selection-start-column="34" selection-end-line="60" selection-end-column="34" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
             <element signature="e#108#1221#0" />
-            <element signature="e#1260#2641#0" />
             <element signature="e#2679#3615#0" />
             <element signature="e#1981#2557#0" />
             <element signature="e#4238#4595#0" />
