@@ -23,14 +23,14 @@ class CF_NADE():
 		#transform input_X to batch*movie_dim*num_classes
 
 		self.int_X = tf.one_hot(tf.cast(self.X - 1, dtype=tf.int32), axis=-1, depth=flags.num_classes)
-		self.X_cum = tf.cumsum(self.int_X, axis=-1, reverse=True)
+		#self.X_cum = tf.cumsum(self.int_X, axis=-1, reverse=True)
 
 		self.input_mask_1 = tf.expand_dims(self.input_mask, 2)
 		self.input_mask_2 = tf.tile(self.input_mask_1, [1,1,flags.num_classes])
 		self.output_mask_1 = tf.expand_dims(self.output_mask, 2)
 		self.output_mask_2 = tf.tile(self.output_mask_1, [1,1,flags.num_classes])
 		#dim(self.H) = batch_size * hidden_dim
-		self.H = tf.tanh(tf.add(self.bias['b_hidden'],tf.tensordot(tf.multiply(self.X_cum, self.input_mask_2), self.weights['W'], axes=[[1,2],[0,1]])))
+		self.H = tf.tanh(tf.add(self.bias['b_hidden'],tf.tensordot(tf.multiply(self.int_X, self.input_mask_2), self.weights['W'], axes=[[1,2],[0,1]])))
 		#dim(self.output_layer) = batch_size * movie_dim * num_classes
 		self.output_layer = tf.add(self.bias['b_output'], tf.multiply(tf.tensordot(self.H, self.weights['Output_W'], axes=[[1],[0]]), self.output_mask_2))
 
@@ -40,13 +40,13 @@ class CF_NADE():
 		#dim(self.pred_scores) = batch * movie
 		self.pred_scores = tf.tensordot(self.scores_prob, [1.0,2.0,3.0,4.0,5.0], axes=[[2],[0]])
 
-		self.true_scores = tf.tensordot(tf.multiply(self.X_cum,self.output_mask_2), [1.0,2.0,3.0,4.0,5.0], axes=[[2],[0]])
+		self.true_scores = tf.tensordot(tf.multiply(self.int_X,self.output_mask_2), [1.0,2.0,3.0,4.0,5.0], axes=[[2],[0]])
 		#dim(self.true_scores_onehot) = batch * movie * num_classes
 		self.true_scores_onehot = tf.one_hot(tf.cast(self.true_scores - 1, tf.int32), axis=-1, depth=flags.num_classes)
 
 		self.loss_op = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=self.true_scores_onehot, logits=self.output_layer))
 		#regularization
-		self.loss_op += tf.sqrt(tf.reduce_mean(self.weights['W'] * self.weights['W']))
+		#self.loss_op += flags.weight_decay * tf.sqrt(tf.reduce_mean(self.weights['W'] * self.weights['W']))
 		#self.optimizer = tf.train.AdamOptimizer(learning_rate=flags.learning_rate, beta1=0.1, beta2=0.001)
 		self.optimizer = tf.train.AdamOptimizer(learning_rate=flags.learning_rate)
 		self.train_op = self.optimizer.minimize(self.loss_op)
@@ -72,7 +72,7 @@ class CF_NADE():
 
 		batch = 1
 		log = open('result.dat', 'w')
-		for epoch in range(10):
+		for epoch in range(flags.epochs):
 			print ('#####################Epoch:', epoch,'########################\n')
 			X, input_mask, output_mask, flag = myData.get_batch_train(512)
 			while(flag):
