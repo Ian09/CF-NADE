@@ -102,7 +102,7 @@ class Data_user():
     def renew_train(self):
         self.used_train = 0
         rd.shuffle(self.index_list_train)
-        myData.prepare_data()
+        self.prepare_data()
 
     def renew_test(self):
         self.used_test = 0
