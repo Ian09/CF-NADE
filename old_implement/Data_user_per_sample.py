@@ -1,5 +1,25 @@
 import random as rd
 import numpy as np
+"""
+Use case:
+    myData = Data_user(data_file_path)
+    myData.split_set(0.8, 0.1)  # portion of train set and development set
+    myData.prepare_data()
+    
+    # get train batch
+    rating, output_mask, input_mask, flag = myData.get_batch_train()  # when epoch ends, it returns (None, None, None, False)
+    
+    # development RMSE
+    rating, output_mask, input_mask, flag = myData.get_batch_dev(batch_size)
+    
+    # after you train for an epoch
+    myData.renew_train()
+    myData.renew_dev()
+    myData.shuffle_data()
+    
+    # test RMSE
+    rating, output_mask, input_mask, flag = myData.get_batch_test(batch_size)
+"""
 
 
 class Data_user():
