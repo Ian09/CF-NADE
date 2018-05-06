@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="01c47cfd-034a-4ee0-b8e6-8d8276e9b67b" name="Default" comment="" />
+    <list default="true" id="01c47cfd-034a-4ee0-b8e6-8d8276e9b67b" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old_implement/Data_user_per_sample.py" beforeDir="false" afterPath="$PROJECT_DIR$/old_implement/Data_user_per_sample.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -14,20 +17,46 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Data_user_per_sample.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Data_user_per_sample.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/old_implement/Data_user_per_sample.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="276">
-              <caret line="126" column="33" selection-start-line="126" selection-start-column="33" selection-end-line="126" selection-end-column="33" />
+            <state relative-caret-position="390">
+              <caret line="153" lean-forward="true" selection-start-line="153" selection-end-line="153" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+                <element signature="e#108#1221#0" />
+                <element signature="e#1260#2641#0" />
+                <element signature="e#2679#3615#0" />
+                <element signature="e#1981#2557#0" />
+                <element signature="e#4238#4595#0" />
+                <element signature="e#2887#3544#0" />
+                <element signature="e#3596#4243#0" />
+                <element signature="e#6078#6126#0" />
+                <element signature="e#4307#4396#0" />
+                <element signature="e#4405#4464#0" />
+                <element signature="e#6996#7035#0" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CF_NADE.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="CF_NADE_2.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/old_implement/CF_NADE_2.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="486">
+              <caret line="96" column="21" lean-forward="true" selection-start-line="96" selection-start-column="21" selection-end-line="96" selection-end-column="21" />
+              <folding>
+                <element signature="e#0#23#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CF_NADE.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/old_implement/CF_NADE.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="509">
-              <caret line="46" column="121" selection-start-line="46" selection-start-column="121" selection-end-line="46" selection-end-column="121" />
+            <state relative-caret-position="2">
+              <caret line="40" column="45" lean-forward="true" selection-start-line="40" selection-start-column="45" selection-end-line="40" selection-end-column="45" />
             </state>
           </provider>
         </entry>
@@ -80,7 +109,7 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="y" value="25" />
     <option name="width" value="1440" />
     <option name="height" value="877" />
@@ -324,11 +353,18 @@
       <option name="project" value="LOCAL" />
       <updated>1525566873044</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Data_user_per_sample.py: add shuffle again, original slow implement">
+      <created>1525630577477</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1525630577477</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="25" width="1440" height="877" extended-state="0" />
+    <frame x="0" y="25" width="1440" height="877" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -369,11 +405,12 @@
     <MESSAGE value="debug Data_user_per_sample.py" />
     <MESSAGE value="Data_user_per_sample.py: support shuffle when myData.renew_train()" />
     <MESSAGE value="Data_user_per_sample.py: roll back to no shuffle" />
-    <option name="LAST_COMMIT_MESSAGE" value="Data_user_per_sample.py: roll back to no shuffle" />
+    <MESSAGE value="Data_user_per_sample.py: add shuffle again, original slow implement" />
+    <option name="LAST_COMMIT_MESSAGE" value="Data_user_per_sample.py: add shuffle again, original slow implement" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="2" />
+      <option name="time" value="3" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -485,17 +522,41 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/old_implement/Data_user_per_sample.py">
+    <entry file="file://$PROJECT_DIR$/old_implement/CF_NADE.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="276">
-          <caret line="126" column="33" selection-start-line="126" selection-start-column="33" selection-end-line="126" selection-end-column="33" />
+        <state relative-caret-position="2">
+          <caret line="40" column="45" lean-forward="true" selection-start-line="40" selection-start-column="45" selection-end-line="40" selection-end-column="45" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/old_implement/CF_NADE.py">
+    <entry file="file://$PROJECT_DIR$/old_implement/CF_NADE_2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="509">
-          <caret line="46" column="121" selection-start-line="46" selection-start-column="121" selection-end-line="46" selection-end-column="121" />
+        <state relative-caret-position="486">
+          <caret line="96" column="21" lean-forward="true" selection-start-line="96" selection-start-column="21" selection-end-line="96" selection-end-column="21" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/old_implement/Data_user_per_sample.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="153" lean-forward="true" selection-start-line="153" selection-end-line="153" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#108#1221#0" />
+            <element signature="e#1260#2641#0" />
+            <element signature="e#2679#3615#0" />
+            <element signature="e#1981#2557#0" />
+            <element signature="e#4238#4595#0" />
+            <element signature="e#2887#3544#0" />
+            <element signature="e#3596#4243#0" />
+            <element signature="e#6078#6126#0" />
+            <element signature="e#4307#4396#0" />
+            <element signature="e#4405#4464#0" />
+            <element signature="e#6996#7035#0" />
+          </folding>
         </state>
       </provider>
     </entry>
