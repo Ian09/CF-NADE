@@ -72,10 +72,9 @@ class CF_NADE():
 		# 	print('fail to read checkpoints, begin to train....')
 
 		batch = 1
-		log = open('result.dat', 'w')
 		for epoch in range(flags.epochs):
 			print ('#####################Epoch:', epoch,'########################\n')
-			X, input_mask, output_mask, flag = myData.get_batch_train(512)
+			X, output_mask, input_mask, flag = myData.get_batch_train(512)
 			while(flag):
 				self.sess.run([self.train_op], feed_dict={self.X:X, self.input_mask:input_mask, self.output_mask:output_mask})
 				print (batch)
@@ -84,26 +83,29 @@ class CF_NADE():
 					myEval = self.sess.run(self.eval, feed_dict={self.X:X, self.input_mask:input_mask, self.output_mask:output_mask})
 					print ('train_eval:', myEval)
 					myLoss = self.sess.run(self.loss_op,feed_dict = {self.X:X,self.input_mask:input_mask,self.output_mask:output_mask})  
-					print ('train_loss:',myLoss)
-					#temp_pred_scores = self.sess.run(self.pred_scores,feed_dict = {self.X:X,self.input_mask:input_mask,self.output_mask:output_mask})      
-					#print(temp_pred_scores)                    
+					print ('train_loss:', myLoss)                 
 				X, input_mask, output_mask, flag = myData.get_batch_train(512)
 
-			loss = []
-			count = 1
-			test_X, input_mask, output_mask, flag = myData.get_batch_test(512)
+			acc = []
+			dev_X, output_mask, input_mask, flag = myData.get_batch_test(512)
 			while(flag):
-				if (count % 10) == 1:
-					print (count)
-				loss.append(self.sess.run([self.eval], feed_dict={self.X:test_X, self.input_mask:input_mask, self.output_mask:output_mask}))
-				count += 1
-				test_X, input_mask, output_mask, flag = myData.get_batch_test(512)
-			print ('test eval:', np.mean(loss))
-			log.write('test eval: %f' % np.mean(loss))
+				acc.append(self.sess.run([self.eval], feed_dict={self.X:dev_X, self.input_mask:input_mask, self.output_mask:output_mask}))
+				test_X, input_mask, output_mask, flag = myData.get_batch_dev(512)
+			print ('dep eval:', np.mean(acc))
 			myData.renew_test()
 			myData.renew_train()
+			myData.shuffle_data()
 			# if not os.path.exists('./checkpoints'):
 			# 	os.makedirs('./checkpoints')
 			# saver.save(self.sess, './checkpoints/CF_NADE.model', global_step=batch)
 
-    
+	def test(self, myData, flags, log):
+		X, output_mask, input_mask, flag = myData.get_batch_test(512)
+		acc = []
+		while(flag):
+			myEval = self.sess.run(self.eval, feed_dict={self.X:X, self.input_mask:input_mask, self.output_mask:output_mask})
+			print ('test_acc:', myEval)
+			acc.append(myEval)
+			X, output_mask, input_mask, flag = myData.get_batch_test(512)
+		print ('final test_acc:', np.mean(acc))
+		log.write(str(np.mean(acc)) + '\n')
