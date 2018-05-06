@@ -31,12 +31,13 @@ class Data_user():
         self.input_mask = np.ones((self.user, self.M), dtype=bool)
 
 
-
-
+    def prepare_data(self):
         i = 0
-        for key in self.userList:
+        keys = list(self.userList.keys())
+        print(type(keys))
+        rd.shuffle(keys)
+        for key in keys:
             ratingsTriples = self.userList[key]
-
             """ratings before i would be trainset, exclusive, that is [0, i-1]"""
             splitPoint = rd.randint(1, len(ratingsTriples) - 1)
             rd.shuffle(ratingsTriples)
@@ -101,6 +102,7 @@ class Data_user():
     def renew_train(self):
         self.used_train = 0
         rd.shuffle(self.index_list_train)
+        myData.prepare_data()
 
     def renew_test(self):
         self.used_test = 0
@@ -116,31 +118,38 @@ class Data_user():
 
 if __name__ == '__main__':
     myData = Data_user('../ml-1m/ratings.dat')
+
+
     myData.split_set(0.9)
 
     index = 0
-    # while True:
-    #     index += 1
-    #     print(index)
-    #
-    #     r, i_m, o_m, flag = myData.get_batch_test(512)
-    #     if flag == False:
-    #         break
-    #
-    #
-    # myData.renew_test()
-    # while True:
-    #     index += 1
-    #     print(index)
-    #
-    #     r, i_m, o_m, flag = myData.get_batch_test(512)
-    #     if flag == False:
-    #         break
+    while True:
+        index += 1
+        print(index)
+
+        r, i_m, o_m, flag = myData.get_batch_train(512)
+        if flag == False:
+            break
+
+    myData.renew_train()
+    while True:
+        index += 1
+        print(index)
+
+        r, i_m, o_m, flag = myData.get_batch_train(512)
+        if flag == False:
+            break
+
+    myData.renew_train()
+    myData.renew_test()
 
     x, input_m, output_m, flag = myData.get_batch_train(512)
-    test_x, _, _, _ = myData.get_batch_test(512)
+    test_x, input_m_t, output_m_t, _ = myData.get_batch_test(512)
 
     print(x)
-    print(input_m)
-    print(output_m)
+    print(x[input_m])
+    print(x[output_m])
     print(test_x)
+    print(input_m_t)
+    print(output_m_t)
+
