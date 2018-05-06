@@ -29,7 +29,9 @@ class Data_user():
         self.all_records = np.zeros((self.user, self.M))  # rating matrix (user by movies)
         self.output_mask = np.ones((self.user, self.M), dtype=bool)
         self.input_mask = np.ones((self.user, self.M), dtype=bool)
+        self.prepare_data()
 
+    def prepare_data(self):
         i = 0
         keys = list(self.userList.keys())
         print(type(keys))
@@ -100,6 +102,7 @@ class Data_user():
     def renew_train(self):
         self.used_train = 0
         rd.shuffle(self.index_list_train)
+        self.prepare_data()
 
     def renew_test(self):
         self.used_test = 0
