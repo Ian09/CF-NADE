@@ -52,8 +52,9 @@ class Data_user():
 
     def prepare_data(self):
         i = 0
-        keys_train_dev, keys_test = list(self.userList.keys())[0: self.num_dev + self.num_train], list(self.userList.keys())[self.num_dev + self.num_train:]
-        rd.shuffle(keys_train_dev)
+        all_keys = list(self.userList.keys())
+        rd.shuffle(all_keys)
+        keys_train_dev, keys_test = all_keys[0: self.num_train + self.num_dev], all_keys[self.num_train + self.num_dev:]
         for key in keys_train_dev:
             ratingsTriples = self.userList[key]
             """ratings before i would be trainset, exclusive, that is [0, i-1]"""
