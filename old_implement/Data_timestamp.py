@@ -1,22 +1,23 @@
 import random as rd
 import numpy as np
+
 """
 Use case:
     myData = Data_user(data_file_path)
     myData.split_set(0.8, 0.1)  # portion of train set and development set
     myData.prepare_data()
-    
+
     # get train batch
     rating, output_mask, input_mask, flag = myData.get_batch_train()  # when epoch ends, it returns (None, None, None, False)
-    
+
     # development RMSE
     rating, output_mask, input_mask, flag = myData.get_batch_dev(batch_size)
-    
+
     # after you train for an epoch
     myData.renew_train()
     myData.renew_dev()
     myData.shuffle_data()
-    
+
     # test RMSE
     rating, output_mask, input_mask, flag = myData.get_batch_test(batch_size)
 """
@@ -49,6 +50,7 @@ class Data_user():
         self.all_records = np.zeros((self.user, self.M))  # rating matrix (user by movies)
         self.output_mask = np.ones((self.user, self.M), dtype=bool)
         self.input_mask = np.ones((self.user, self.M), dtype=bool)
+        self.timestamp = np.zeros((self.user, self.M))
 
     def prepare_data(self):
         i = 0
@@ -60,7 +62,7 @@ class Data_user():
             """ratings before i would be trainset, exclusive, that is [0, i-1]"""
             splitPoint = rd.randint(1, len(ratingsTriples) - 1)
             rd.shuffle(ratingsTriples)
-            matrix_rating, input_mask, output_mask = self.triples2vector(ratingsTriples[0: splitPoint - 1],
+            matrix_rating, input_mask, output_mask, timestamp = self.triples2vector(ratingsTriples[0: splitPoint - 1],
                                                                          ratingsTriples[splitPoint:])
             self.all_records[i] = matrix_rating
             self.input_mask[i] = input_mask
@@ -71,16 +73,18 @@ class Data_user():
             ratingsTriples = self.userList[key]
             splitPoint = rd.randint(1, len(ratingsTriples) - 1)
             rd.shuffle(ratingsTriples)
-            matrix_rating, input_mask, output_mask = self.triples2vector(ratingsTriples[0: splitPoint - 1],
+            matrix_rating, input_mask, output_mask, timestamp = self.triples2vector(ratingsTriples[0: splitPoint - 1],
                                                                          ratingsTriples[splitPoint:])
             self.all_records[i] = matrix_rating
             self.input_mask[i] = input_mask
             self.output_mask[i] = output_mask
+            self.timestamp[i] = timestamp
             i += 1
 
     def shuffle_data(self):
         i = 0
-        keys_train_dev, keys_test = list(self.userList.keys())[0: self.num_dev + self.num_train], list(self.userList.keys())[self.num_dev + self.num_train:]
+        keys_train_dev, keys_test = list(self.userList.keys())[0: self.num_dev + self.num_train], list(
+            self.userList.keys())[self.num_dev + self.num_train:]
         rd.shuffle(keys_train_dev)
         for key in keys_train_dev:
             ratingsTriples = self.userList[key]
@@ -97,19 +101,22 @@ class Data_user():
     def triples2vector(self, triples_input, triples_output):
         matrix_input = np.zeros((1, self.M))
         matrix_output = np.zeros((1, self.M))
+        matrix_timestamp = np.zeros((1, self.M))
 
         for triple in triples_input:
             matrix_input[0, self.movieID2index[triple[0]]] = triple[1]
+            matrix_timestamp[0, self.movieID2index[triple[0]]] = triple[2]
         input_mask = matrix_input > 0
 
         for triple in triples_output:
             matrix_output[0, self.movieID2index[triple[0]]] = triple[1]
+            matrix_timestamp[0, self.movieID2index[triple[0]]] = triple[2]
         output_mask = matrix_output > 0
 
         if np.sum(np.ones((1, self.M))[np.multiply(input_mask, output_mask)]) > 0:
             print('There is overlapping')
 
-        return matrix_input + matrix_output, input_mask, output_mask
+        return matrix_input + matrix_output, input_mask, output_mask, matrix_timestamp
 
     def split_set(self, ratio_train, ratio_dev):
         self.num_train = int(self.user * ratio_train)
@@ -127,13 +134,15 @@ class Data_user():
         ratings = np.zeros((batch_size, self.M))
         out_mask = np.ones((batch_size, self.M), dtype=bool)
         in_mask = np.ones((batch_size, self.M), dtype=bool)
+        timestamp = np.zeros((batch_size, self.M))
         for i in range(0, batch_size):
             ratings[i] = self.all_records[self.index_list_train[i + self.used_train], :]
             out_mask[i] = self.output_mask[self.index_list_train[i + self.used_train], :]
             in_mask[i] = self.input_mask[self.index_list_train[i + self.used_train], :]
+            timestamp[i] = self.timestamp[self.index_list_train[i + self.used_train], :]
         self.used_train += batch_size
 
-        return ratings, out_mask, in_mask, True
+        return ratings, out_mask, in_mask, True, timestamp
 
     def get_batch_dev(self, batch_size):
         if self.used_dev + batch_size >= self.num_dev:
@@ -141,12 +150,14 @@ class Data_user():
         ratings = np.zeros((batch_size, self.M))
         out_mask = np.ones((batch_size, self.M), dtype=bool)
         in_mask = np.ones((batch_size, self.M), dtype=bool)
+        timestamp = np.zeros((batch_size, self.M))
         for i in range(0, batch_size):
             ratings[i] = self.all_records[self.index_list_dev[i + self.used_dev], :]
             out_mask[i] = self.output_mask[self.index_list_dev[i + self.used_dev], :]
             in_mask[i] = self.input_mask[self.index_list_dev[i + self.used_dev], :]
+            timestamp[i] = self.timestamp[self.index_list_dev[i + self.used_dev], :]
         self.used_dev += batch_size
-        return ratings, out_mask, in_mask, True
+        return ratings, out_mask, in_mask, True, timestamp
 
     def get_batch_test(self, batch_size):
         if self.used_test + batch_size >= self.num_test:
@@ -154,12 +165,14 @@ class Data_user():
         ratings = np.zeros((batch_size, self.M))
         out_mask = np.ones((batch_size, self.M), dtype=bool)
         in_mask = np.ones((batch_size, self.M), dtype=bool)
+        timestamp = np.zeros((batch_size, self.M))
         for i in range(0, batch_size):
             ratings[i] = self.all_records[self.index_list_test[i + self.used_test], :]
             out_mask[i] = self.output_mask[self.index_list_test[i + self.used_test], :]
             in_mask[i] = self.input_mask[self.index_list_test[i + self.used_test], :]
+            timestamp[i] = self.timestamp[self.index_list_test[i + self.used_test], :]
         self.used_test += batch_size
-        return ratings, out_mask, in_mask, True
+        return ratings, out_mask, in_mask, True, timestamp
 
     def renew_train(self):
         self.used_train = 0
@@ -171,7 +184,7 @@ class Data_user():
 
     def renew_dev(self):
         self.used_dev = 0
-        rd. shuffle(self.index_list_train)
+        rd.shuffle(self.index_list_train)
 
 
 if __name__ == '__main__':
@@ -197,19 +210,20 @@ if __name__ == '__main__':
     #     if flag == False:
     #         break
 
-    # x, input_m, output_m, flag = myData.get_batch_test(512)
-    # myData.renew_test()
-    # test_x, input_m_t, output_m_t, _ = myData.get_batch_test(512)
+    x, input_m, output_m, flag, t_1 = myData.get_batch_test(512)
+    myData.renew_test()
+    test_x, input_m_t, output_m_t, _, t_2 = myData.get_batch_test(512)
+
     #
-    # print(x)
-    # print(x[input_m])
+    print(x)
+    print(t_1)
     # print(x[output_m])
-    # print(test_x)
-    # print(input_m_t)
+    print(test_x)
+    print(t_2)
     # print(output_m_t)
-    count = 0
-    for key in myData.userList:
-        if len(myData.userList[key]) >= 30:
-            count += 1
-    print('%d users' % count)
+    # count = 0
+    # for key in myData.userList:
+    #     if len(myData.userList[key]) >= 30:
+    #         count += 1
+    # print('%d users' % count)
 
