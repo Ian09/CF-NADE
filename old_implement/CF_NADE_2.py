@@ -61,38 +61,12 @@ class CF_NADE():
 
 		self.sess.run(self.init)	
 
-		# saver = tf.train.Saver()
-		# print ('reading checkpoints....')
-		# ckpt = tf.train.get_checkpoint_state('./checkpoints/')
-		# if ckpt and ckpt.model_checkpoint_path:
-		# 	ckpt_name = os.path.basename(ckpt.model_checkpoint_path)
-		# 	saver.restore(self.sess, os.path.join('./checkpoints', ckpt_name))
-		# 	print("[*] Success to read {}".format(ckpt_name))
-		# else:
-		# 	print('fail to read checkpoints, begin to train....')
-
-		batch = 1
 		for epoch in range(flags.epochs):
 			print ('#####################Epoch:', epoch,'########################\n')
 			X, output_mask, input_mask, flag = myData.get_batch_train(512)
 			while(flag):
-				self.sess.run([self.train_op], feed_dict={self.X:X, self.input_mask:input_mask, self.output_mask:output_mask})
-				print (batch)
-				batch += 1
-				if (batch % 5 == 1):
-					myEval = self.sess.run(self.eval, feed_dict={self.X:X, self.input_mask:input_mask, self.output_mask:output_mask})
-					print ('train_eval:', myEval)
-					myLoss = self.sess.run(self.loss_op,feed_dict = {self.X:X,self.input_mask:input_mask,self.output_mask:output_mask})  
-					print ('train_loss:', myLoss)                 
+				self.sess.run([self.train_op], feed_dict={self.X:X, self.input_mask:input_mask, self.output_mask:output_mask})                
 				X, input_mask, output_mask, flag = myData.get_batch_train(512)
-
-			acc = []
-			dev_X, output_mask, input_mask, flag = myData.get_batch_test(512)
-			while(flag):
-				acc.append(self.sess.run([self.eval], feed_dict={self.X:dev_X, self.input_mask:input_mask, self.output_mask:output_mask}))
-				test_X, input_mask, output_mask, flag = myData.get_batch_dev(512)
-			print ('dep eval:', np.mean(acc))
-			myData.renew_test()
 			myData.renew_train()
 			myData.shuffle_data()
 			# if not os.path.exists('./checkpoints'):
@@ -108,4 +82,5 @@ class CF_NADE():
 			acc.append(myEval)
 			X, output_mask, input_mask, flag = myData.get_batch_test(512)
 		print ('final test_acc:', np.mean(acc))
+		myData.renew_test()
 		log.write(str(np.mean(acc)) + '\n')

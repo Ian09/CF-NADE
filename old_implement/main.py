@@ -15,15 +15,19 @@ flags.DEFINE_integer('num_classes', 5, 'score range')
 flags.DEFINE_float('learning_rate', 0.001, 'learning_rate for Adam')
 flags.DEFINE_integer('hidden_dim', 500, 'dimenstion of hidden states')
 flags.DEFINE_integer('epochs', 10, 'epochs to train')
-flags.DEFINE_integer('test_avg_num', 10, 'how many test acc should we get to averge final test acc')
+flags.DEFINE_integer('test_avg_num', 3, 'how many test acc should we get to averge final test acc')
 flags.DEFINE_float('weight_decay', 1, 'weight decay for regularization')
+flags.DEFINE_float('weight_W', 1, 'weight W')
+flags.DEFINE_float('weight_OUT_W', 1, 'weight OUT_W')
 FLAGS = flags.FLAGS
 
 def main(_):
-	log = open('test_eval.dat', 'w')
+	log = open('test_eval.dat', 'a+')
+	log.write('weight_decay: %f, learning_rate: %f, weight_W: %f, weight_OUT_W: %f\n' % 
+		(FLAGS.weight_decay, FLAGS.learning_rate, FLAGS.weight_W, FLAGS.weight_OUT_W))
 	for i in range(FLAGS.test_avg_num):
 		myData = Data_user('../ml-1m/ratings.dat')
-		myData.split_set(0.8, 0.1)
+		myData.split_set(0.9, 0)
 		myData.prepare_data()
 
 		run_config = tf.ConfigProto()
