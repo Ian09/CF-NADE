@@ -7,7 +7,7 @@ Use case:
     myData.prepare_data()
     
     # get train batch
-    rating, output_mask, input_mask, flag = myData.get_batch_train()  # when epoch ends, it returns (None, None, None, False)
+    rating, output_mask, input_mask, flag = myData.get_batch_train(batch_size)  # when epoch ends, it returns (None, None, None, False)
     
     # development RMSE
     rating, output_mask, input_mask, flag = myData.get_batch_dev(batch_size)
