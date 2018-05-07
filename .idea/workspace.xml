@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="01c47cfd-034a-4ee0-b8e6-8d8276e9b67b" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/old_implement/Data_timestamp.py" beforeDir="false" afterPath="$PROJECT_DIR$/old_implement/Data_timestamp.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old_implement/Data_lstm.py" beforeDir="false" afterPath="$PROJECT_DIR$/old_implement/Data_lstm.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -17,11 +17,43 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Data_timestamp.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/old_implement/Data_timestamp.py">
+      <file leaf-file-name="Data_lstm.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/old_implement/Data_lstm.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="215">
-              <caret line="196" column="20" lean-forward="true" selection-start-line="196" selection-start-column="20" selection-end-line="196" selection-end-column="20" />
+            <state relative-caret-position="181">
+              <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+                <element signature="e#101#1196#0" />
+                <element signature="e#1240#1415#0" />
+                <element signature="e#1454#1482#0" />
+                <element signature="e#1549#1957#0" />
+                <element signature="e#2023#2426#0" />
+                <element signature="e#2463#2519#0" />
+                <element signature="e#2555#2609#0" />
+                <element signature="e#2683#3315#0" />
+                <element signature="e#3030#3095#0" />
+                <element signature="e#3297#3492#0" />
+                <element signature="e#3566#4177#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Data.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/new_implement/Data.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="319">
+              <caret line="50" column="40" lean-forward="true" selection-start-line="50" selection-start-column="40" selection-end-line="50" selection-end-column="40" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Data_user_per_sample.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/old_implement/Data_user_per_sample.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="159">
+              <caret line="177" column="4" lean-forward="true" selection-start-line="177" selection-start-column="4" selection-end-line="179" selection-end-column="25" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -43,6 +75,7 @@
       <find>splitDict</find>
       <find>output_mask</find>
       <find>shuffle</find>
+      <find>get_ourput_mask_nonzero</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -65,8 +98,9 @@
         <option value="$PROJECT_DIR$/new_implement/Data.py" />
         <option value="$PROJECT_DIR$/new_implement/Data_user_per_sample.py" />
         <option value="$PROJECT_DIR$/old_implement/Data_user_per_sample.py" />
-        <option value="$PROJECT_DIR$/old_implement/Data_lstm.py" />
         <option value="$PROJECT_DIR$/old_implement/Data_timestamp.py" />
+        <option value="$PROJECT_DIR$/old_implement/CF_NADE_Time_Stamp.py" />
+        <option value="$PROJECT_DIR$/old_implement/Data_lstm.py" />
       </list>
     </option>
   </component>
@@ -140,7 +174,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.Data_timestamp">
+  <component name="RunManager" selected="Python.Data_lstm">
     <configuration name="Data" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="CF-NADE" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -155,6 +189,25 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/new_implement/Data.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
+    <configuration name="Data_lstm" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="CF-NADE" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/old_implement" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/old_implement/Data_lstm.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -236,39 +289,20 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
-    <configuration name="test_data" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="CF-NADE" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/new_implement" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/new_implement/test_data.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
     <list>
       <item itemvalue="Python.Data" />
-      <item itemvalue="Python.test_data" />
       <item itemvalue="Python.Data_user_per_sample" />
       <item itemvalue="Python.Data_user_per_sample (1)" />
       <item itemvalue="Python.Data_timestamp" />
+      <item itemvalue="Python.Data_lstm" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.Data_lstm" />
         <item itemvalue="Python.Data_timestamp" />
         <item itemvalue="Python.Data_user_per_sample (1)" />
         <item itemvalue="Python.Data_user_per_sample" />
         <item itemvalue="Python.Data" />
-        <item itemvalue="Python.test_data" />
       </list>
     </recent_temporary>
   </component>
@@ -374,7 +408,14 @@
       <option name="project" value="LOCAL" />
       <updated>1525711475944</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Data_lstm.py: debug triple2vecor()">
+      <created>1525723943686</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1525723943686</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -384,12 +425,12 @@
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.4283935" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.4283935" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.3275218" />
       <window_info anchor="bottom" id="Python Console" order="7" weight="0.32948583" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info anchor="right" id="Remote Host" order="3" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="right" id="SciView" order="3" />
@@ -425,11 +466,12 @@
     <MESSAGE value="Data_user_per_sample.py: change prepare_data.py" />
     <MESSAGE value="Data_timestamp.py: created" />
     <MESSAGE value="Data_lstm.py: created" />
-    <option name="LAST_COMMIT_MESSAGE" value="Data_lstm.py: created" />
+    <MESSAGE value="Data_lstm.py: debug triple2vecor()" />
+    <option name="LAST_COMMIT_MESSAGE" value="Data_lstm.py: debug triple2vecor()" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="3" />
+      <option name="time" value="5" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -439,6 +481,17 @@
           <caret line="29" column="27" selection-start-line="29" selection-start-column="27" selection-end-line="29" selection-end-column="27" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#101#1196#0" />
+            <element signature="e#1240#1415#0" />
+            <element signature="e#1454#1482#0" />
+            <element signature="e#1549#1957#0" />
+            <element signature="e#2023#2426#0" />
+            <element signature="e#2463#2519#0" />
+            <element signature="e#2555#2609#0" />
+            <element signature="e#2683#3315#0" />
+            <element signature="e#3030#3095#0" />
+            <element signature="e#3297#3492#0" />
+            <element signature="e#3566#4177#0" />
           </folding>
         </state>
       </provider>
@@ -533,13 +586,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/new_implement/Data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="750">
-          <caret line="51" column="89" selection-start-line="16" selection-end-line="51" selection-end-column="89" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/old_implement/CF_NADE_2.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1005">
@@ -550,10 +596,38 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/old_implement/Data_timestamp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2715">
+          <caret line="181" column="23" selection-start-line="181" selection-start-column="23" selection-end-line="181" selection-end-column="23" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#8443#9371#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/old_implement/CF_NADE_Time_Stamp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="415">
+          <caret line="84" column="38" lean-forward="true" selection-start-line="84" selection-start-column="38" selection-end-line="84" selection-end-column="38" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/new_implement/Data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="319">
+          <caret line="50" column="40" lean-forward="true" selection-start-line="50" selection-start-column="40" selection-end-line="50" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/old_implement/Data_user_per_sample.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="436">
-          <caret line="54" column="45" lean-forward="true" selection-start-line="54" selection-start-column="8" selection-end-line="54" selection-end-column="45" />
+        <state relative-caret-position="159">
+          <caret line="177" column="4" lean-forward="true" selection-start-line="177" selection-start-column="4" selection-end-line="179" selection-end-column="25" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
@@ -562,30 +636,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/old_implement/Data_lstm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="500">
-          <caret line="25" column="61" selection-start-line="25" selection-start-column="61" selection-end-line="25" selection-end-column="61" />
+        <state relative-caret-position="181">
+          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/old_implement/CF_NADE_Time_Stamp.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="332">
-          <caret line="112" column="27" selection-start-line="112" selection-start-column="27" selection-end-line="112" selection-end-column="27" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/old_implement/Data_timestamp.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="215">
-          <caret line="196" column="20" lean-forward="true" selection-start-line="196" selection-start-column="20" selection-end-line="196" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#101#1196#0" />
+            <element signature="e#1240#1415#0" />
+            <element signature="e#1454#1482#0" />
+            <element signature="e#1549#1957#0" />
+            <element signature="e#2023#2426#0" />
+            <element signature="e#2463#2519#0" />
+            <element signature="e#2555#2609#0" />
+            <element signature="e#2683#3315#0" />
+            <element signature="e#3030#3095#0" />
+            <element signature="e#3297#3492#0" />
+            <element signature="e#3566#4177#0" />
           </folding>
         </state>
       </provider>
