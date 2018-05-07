@@ -83,19 +83,19 @@ class Data_user():
 
     def shuffle_data(self):
         i = 0
-        keys_train_dev, keys_test = list(self.userList.keys())[0: self.num_dev + self.num_train], list(
-            self.userList.keys())[self.num_dev + self.num_train:]
+        keys_train_dev, keys_test = list(self.userList.keys())[0: self.num_dev + self.num_train], list(self.userList.keys())[self.num_dev + self.num_train:]
         rd.shuffle(keys_train_dev)
         for key in keys_train_dev:
             ratingsTriples = self.userList[key]
             """ratings before i would be trainset, exclusive, that is [0, i-1]"""
             splitPoint = rd.randint(1, len(ratingsTriples) - 1)
             rd.shuffle(ratingsTriples)
-            matrix_rating, input_mask, output_mask = self.triples2vector(ratingsTriples[0: splitPoint - 1],
-                                                                         ratingsTriples[splitPoint:])
+            matrix_rating, input_mask, output_mask, matrix_timestamp = self.triples2vector(ratingsTriples[0: splitPoint - 1], ratingsTriples[splitPoint:])
+
             self.all_records[i] = matrix_rating
             self.input_mask[i] = input_mask
             self.output_mask[i] = output_mask
+            self.timestamp[i] = matrix_timestamp
             i += 1
 
     def triples2vector(self, triples_input, triples_output):
@@ -210,11 +210,25 @@ if __name__ == '__main__':
     #     if flag == False:
     #         break
 
-    x, input_m, output_m, flag, t_1 = myData.get_batch_test(512)
+    x, input_m, output_m, flag, t_1 = myData.get_batch_train(512)
     myData.renew_test()
-    test_x, input_m_t, output_m_t, _, t_2 = myData.get_batch_test(512)
+    test_x, input_m_t, output_m_t, _, t_2 = myData.get_batch_train(512)
 
     #
+    print(x)
+    print(t_1)
+    # print(x[output_m])
+    print(test_x)
+    print(t_2)
+
+    myData.renew_train()
+    myData.renew_test()
+    myData.shuffle_data()
+
+    x, input_m, output_m, flag, t_1 = myData.get_batch_train(512)
+    myData.renew_test()
+    test_x, input_m_t, output_m_t, _, t_2 = myData.get_batch_train(512)
+
     print(x)
     print(t_1)
     # print(x[output_m])
