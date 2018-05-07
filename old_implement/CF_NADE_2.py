@@ -47,7 +47,7 @@ class CF_NADE():
 
 		self.loss_op = tf.reduce_sum(tf.nn.softmax_cross_entropy_with_logits(labels=self.true_scores_onehot, logits=self.output_layer))
 		#regularization
-		self.loss_op += flags.weight_decay * (tf.reduce_sum(self.weights['W'] * self.weights['W']) + tf.reduce_sum(self.weights['Output_W'] * self.weights['Output_W']))
+		self.loss_op += flags.weight_decay * (flags.weight_W * tf.reduce_sum(self.weights['W'] * self.weights['W']) + flags.weight_OUT_W * tf.reduce_sum(self.weights['Output_W'] * self.weights['Output_W']))
 		self.optimizer = tf.train.AdamOptimizer(learning_rate=flags.learning_rate, beta1=0.1, beta2=0.001)
 		#self.optimizer = tf.train.AdamOptimizer(learning_rate=flags.learning_rate)
 		self.train_op = self.optimizer.minimize(self.loss_op)
