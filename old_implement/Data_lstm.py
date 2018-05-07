@@ -66,7 +66,7 @@ class Data:
         """return X(batch * seq), Y(batch * movie), output_mask(batch * movie), flag"""
         if batch_size + self.used_test >= len(self.test_users):
             return None, None, None, False
-        X, Y = self.construct_matrix(self.test_users[self.test_train: self.test_train+batch_size], sequence_len)
+        X, Y = self.construct_matrix(self.test_users[self.used_test: self.used_test+batch_size], sequence_len, batch_size)
         output_mask = Y > 0
         self.used_test += batch_size
         return X, Y, output_mask, True
