@@ -129,7 +129,7 @@ class Data_user():
 
     def get_batch_train(self, batch_size):
         if self.used_train + batch_size >= self.num_train:
-            return None, None, None, False
+            return None, None, None, False, None
 
         ratings = np.zeros((batch_size, self.M))
         out_mask = np.ones((batch_size, self.M), dtype=bool)
@@ -161,7 +161,7 @@ class Data_user():
 
     def get_batch_test(self, batch_size):
         if self.used_test + batch_size >= self.num_test:
-            return None, None, None, False
+            return None, None, None, False,None
         ratings = np.zeros((batch_size, self.M))
         out_mask = np.ones((batch_size, self.M), dtype=bool)
         in_mask = np.ones((batch_size, self.M), dtype=bool)
