@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="01c47cfd-034a-4ee0-b8e6-8d8276e9b67b" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/old_implement/Data_lstm.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/old_implement/Data_user_per_sample.py" beforeDir="false" afterPath="$PROJECT_DIR$/old_implement/Data_user_per_sample.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -17,23 +17,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Data_user_per_sample.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/old_implement/Data_user_per_sample.py">
+      <file leaf-file-name="Data_lstm.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/old_implement/Data_lstm.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="282">
-              <caret line="60" column="34" lean-forward="true" selection-start-line="60" selection-start-column="34" selection-end-line="60" selection-end-column="34" />
+            <state relative-caret-position="696">
+              <caret line="71" column="11" lean-forward="true" selection-start-line="71" selection-start-column="11" selection-end-line="71" selection-end-column="11" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
-                <element signature="e#108#1221#0" />
-                <element signature="e#2679#3615#0" />
-                <element signature="e#1981#2557#0" />
-                <element signature="e#4238#4595#0" />
-                <element signature="e#2887#3544#0" />
-                <element signature="e#3596#4243#0" />
-                <element signature="e#6078#6126#0" />
-                <element signature="e#4307#4396#0" />
-                <element signature="e#4405#4464#0" />
-                <element signature="e#6996#7035#0" />
               </folding>
             </state>
           </provider>
@@ -42,8 +32,8 @@
       <file leaf-file-name="CF_NADE_2.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/old_implement/CF_NADE_2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="486">
-              <caret line="96" column="21" lean-forward="true" selection-start-line="96" selection-start-column="21" selection-end-line="96" selection-end-column="21" />
+            <state relative-caret-position="1005">
+              <caret line="69" column="21" selection-start-line="69" selection-start-column="21" selection-end-line="69" selection-end-column="21" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -51,11 +41,23 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CF_NADE.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/old_implement/CF_NADE.py">
+      <file leaf-file-name="Data_user_per_sample.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/old_implement/Data_user_per_sample.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2">
-              <caret line="40" column="45" lean-forward="true" selection-start-line="40" selection-start-column="45" selection-end-line="40" selection-end-column="45" />
+            <state relative-caret-position="436">
+              <caret line="54" column="45" lean-forward="true" selection-start-line="54" selection-start-column="8" selection-end-line="54" selection-end-column="45" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Data.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/new_implement/Data.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="750">
+              <caret line="51" column="89" selection-start-line="16" selection-end-line="51" selection-end-column="89" />
             </state>
           </provider>
         </entry>
@@ -96,6 +98,8 @@
         <option value="$PROJECT_DIR$/new_implement/Data.py" />
         <option value="$PROJECT_DIR$/new_implement/Data_user_per_sample.py" />
         <option value="$PROJECT_DIR$/old_implement/Data_user_per_sample.py" />
+        <option value="$PROJECT_DIR$/old_implement/Data_timestamp.py" />
+        <option value="$PROJECT_DIR$/old_implement/Data_lstm.py" />
       </list>
     </option>
   </component>
@@ -109,9 +113,13 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="y" value="25" />
-    <option name="width" value="1440" />
-    <option name="height" value="877" />
+    <option name="x" value="1680" />
+    <option name="y" value="23" />
+    <option name="width" value="1920" />
+    <option name="height" value="1057" />
+  </component>
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -124,6 +132,11 @@
             <path>
               <item name="CF-NADE" type="b2602c69:ProjectViewProjectNode" />
               <item name="CF-NADE" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CF-NADE" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CF-NADE" type="462c0819:PsiDirectoryNode" />
+              <item name="new_implement" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="CF-NADE" type="b2602c69:ProjectViewProjectNode" />
@@ -160,7 +173,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.Data_user_per_sample (1)">
+  <component name="RunManager" selected="Python.Data_timestamp">
     <configuration name="Data" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="CF-NADE" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -175,6 +188,25 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/new_implement/Data.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
+    <configuration name="Data_timestamp" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="CF-NADE" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/old_implement" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/old_implement/Data_timestamp.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -237,25 +269,6 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
-    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="CF-NADE" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/new_implement" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/new_implement/main.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
     <configuration name="test_data" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="CF-NADE" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -278,17 +291,17 @@
     <list>
       <item itemvalue="Python.Data" />
       <item itemvalue="Python.test_data" />
-      <item itemvalue="Python.main" />
       <item itemvalue="Python.Data_user_per_sample" />
       <item itemvalue="Python.Data_user_per_sample (1)" />
+      <item itemvalue="Python.Data_timestamp" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.Data_timestamp" />
         <item itemvalue="Python.Data_user_per_sample (1)" />
         <item itemvalue="Python.Data_user_per_sample" />
         <item itemvalue="Python.Data" />
         <item itemvalue="Python.test_data" />
-        <item itemvalue="Python.main" />
       </list>
     </recent_temporary>
   </component>
@@ -373,22 +386,36 @@
       <option name="project" value="LOCAL" />
       <updated>1525636751113</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Data_user_per_sample.py: change prepare_data.py">
+      <created>1525639257059</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1525639257059</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Data_timestamp.py: created">
+      <created>1525658586892</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1525658586892</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="25" width="1440" height="877" extended-state="6" />
+    <frame x="1680" y="23" width="1920" height="1057" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.7808219" />
-      <window_info anchor="bottom" id="Version Control" order="7" weight="0.32876712" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.4283935" />
+      <window_info anchor="bottom" id="Version Control" order="7" weight="0.32858595" />
       <window_info anchor="bottom" id="Python Console" order="7" weight="0.32948583" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info anchor="right" id="Remote Host" order="3" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1875" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="right" id="SciView" order="3" />
@@ -421,7 +448,9 @@
     <MESSAGE value="Data_user_per_sample.py: add shuffle again, original slow implement" />
     <MESSAGE value="Data_user_per_sample.py: now split data into train, dev, test" />
     <MESSAGE value="Data_user_per_sample.py: add documents" />
-    <option name="LAST_COMMIT_MESSAGE" value="Data_user_per_sample.py: add documents" />
+    <MESSAGE value="Data_user_per_sample.py: change prepare_data.py" />
+    <MESSAGE value="Data_timestamp.py: created" />
+    <option name="LAST_COMMIT_MESSAGE" value="Data_timestamp.py: created" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -429,13 +458,47 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/old_implement/Data_lstm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="29" column="27" selection-start-line="29" selection-start-column="27" selection-end-line="29" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/old_implement/CF_NADE_2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1350">
+          <caret line="92" column="21" lean-forward="true" selection-start-line="92" selection-start-column="21" selection-end-line="92" selection-end-column="21" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/old_implement/Data_user_per_sample.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="19" column="15" lean-forward="true" selection-start-line="19" selection-start-column="15" selection-end-line="19" selection-end-column="15" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/new_implement/Data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="750">
+          <caret line="51" column="89" lean-forward="true" selection-start-line="16" selection-end-line="51" selection-end-column="89" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/new_implement/Data.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2595">
           <caret line="174" column="18" lean-forward="true" selection-start-line="174" selection-start-column="18" selection-end-line="174" selection-end-column="18" />
-          <folding>
-            <element signature="e#381#400#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -446,13 +509,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/new_implement/test_data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="19" lean-forward="true" selection-start-line="3" selection-start-column="19" selection-end-line="3" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/new_implement/test_data.py" />
     <entry file="file://$PROJECT_DIR$/new_implement/Data.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="405">
@@ -461,13 +518,7 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/new_implement/Data_new.py" />
-    <entry file="file://$PROJECT_DIR$/ml-10m/ratings.dat">
-      <provider selected="true" editor-type-id="LargeFileEditor">
-        <state relative-caret-position="105">
-          <caret line="308" column="22" selection-start-line="308" selection-start-column="22" selection-end-line="308" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/ml-10m/ratings.dat" />
     <entry file="file://$PROJECT_DIR$/new_implement/data_test.py" />
     <entry file="file://$PROJECT_DIR$/new_implement/main.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -483,20 +534,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ml-1m/ratings_test.dat">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="21" lean-forward="true" selection-start-line="12" selection-start-column="21" selection-end-line="12" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/new_implement/test_data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/ml-1m/ratings_test.dat" />
+    <entry file="file://$PROJECT_DIR$/new_implement/test_data.py" />
     <entry file="file://$PROJECT_DIR$/new_implement/nohup.out">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="658">
@@ -504,36 +543,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/new_implement/Dimension.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/new_implement/Data_user_per_sample.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="284">
-          <caret line="97" column="42" lean-forward="true" selection-start-line="97" selection-start-column="42" selection-end-line="97" selection-end-column="42" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/new_implement/Data_user_per_sample.py" />
     <entry file="file://$PROJECT_DIR$/new_implement/CF_NADE.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="461">
           <caret line="113" column="28" selection-start-line="113" selection-start-column="28" selection-end-line="113" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/new_implement/Data.py">
+    <entry file="file://$PROJECT_DIR$/old_implement/Data_timestamp.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="44" column="41" selection-start-line="44" selection-start-column="41" selection-end-line="44" selection-end-column="41" />
-          <folding>
-            <element signature="e#381#400#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="270">
+          <caret line="18" column="25" lean-forward="true" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
         </state>
       </provider>
     </entry>
@@ -544,10 +565,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/new_implement/Data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="750">
+          <caret line="51" column="89" selection-start-line="16" selection-end-line="51" selection-end-column="89" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/old_implement/CF_NADE_2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="486">
-          <caret line="96" column="21" lean-forward="true" selection-start-line="96" selection-start-column="21" selection-end-line="96" selection-end-column="21" />
+        <state relative-caret-position="1005">
+          <caret line="69" column="21" selection-start-line="69" selection-start-column="21" selection-end-line="69" selection-end-column="21" />
           <folding>
             <element signature="e#0#23#0" expanded="true" />
           </folding>
@@ -556,20 +584,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/old_implement/Data_user_per_sample.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="282">
-          <caret line="60" column="34" lean-forward="true" selection-start-line="60" selection-start-column="34" selection-end-line="60" selection-end-column="34" />
+        <state relative-caret-position="436">
+          <caret line="54" column="45" lean-forward="true" selection-start-line="54" selection-start-column="8" selection-end-line="54" selection-end-column="45" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#108#1221#0" />
-            <element signature="e#2679#3615#0" />
-            <element signature="e#1981#2557#0" />
-            <element signature="e#4238#4595#0" />
-            <element signature="e#2887#3544#0" />
-            <element signature="e#3596#4243#0" />
-            <element signature="e#6078#6126#0" />
-            <element signature="e#4307#4396#0" />
-            <element signature="e#4405#4464#0" />
-            <element signature="e#6996#7035#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/old_implement/Data_lstm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="696">
+          <caret line="71" column="11" lean-forward="true" selection-start-line="71" selection-start-column="11" selection-end-line="71" selection-end-column="11" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>
