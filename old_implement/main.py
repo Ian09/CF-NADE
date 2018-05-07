@@ -19,6 +19,8 @@ flags.DEFINE_integer('test_avg_num', 3, 'how many test acc should we get to aver
 flags.DEFINE_float('weight_decay', 1, 'weight decay for regularization')
 flags.DEFINE_float('weight_W', 1, 'weight W')
 flags.DEFINE_float('weight_OUT_W', 1, 'weight OUT_W')
+flags.DEFINE_integer('embedding_dim', 100, '')
+flags.DEFINE_integer('seq_len', 20, '')
 FLAGS = flags.FLAGS
 
 def main(_):
