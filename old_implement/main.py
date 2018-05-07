@@ -1,6 +1,6 @@
 import tensorflow as tf
 import numpy as np
-from CF_NADE_2 import CF_NADE
+from CF_NADE_Matrix import CF_NADE
 from Data_user_per_sample import Data_user
 
 flags = tf.app.flags
@@ -12,9 +12,9 @@ flags.DEFINE_float('time_transform_parameter', 0, 'for the weights decay through
 flags.DEFINE_integer('batch_size', 512, 'batch_size for the users')
 flags.DEFINE_integer('movie_dim', 3706, 'how many movies in the dataset')
 flags.DEFINE_integer('num_classes', 5, 'score range')
-flags.DEFINE_float('learning_rate', 0.001, 'learning_rate for Adam')
+flags.DEFINE_float('learning_rate', 0.1, 'learning_rate for Adam')
 flags.DEFINE_integer('hidden_dim', 500, 'dimenstion of hidden states')
-flags.DEFINE_integer('epochs', 10, 'epochs to train')
+flags.DEFINE_integer('epochs', 200, 'epochs to train')
 flags.DEFINE_integer('test_avg_num', 3, 'how many test acc should we get to averge final test acc')
 flags.DEFINE_float('weight_decay', 1, 'weight decay for regularization')
 flags.DEFINE_float('weight_W', 1, 'weight W')
