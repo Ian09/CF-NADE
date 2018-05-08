@@ -55,7 +55,7 @@ class CF_NADE():
 		self.eval = tf.sqrt(tf.losses.mean_squared_error(labels=self.true_scores , predictions=self.pred_scores, weights = self.output_mask))
 		self.init = tf.global_variables_initializer()
 
-	def time_stamp_eval(self, flags)
+	def time_stamp_eval(self, flags):
 		self.int_X = tf.one_hot(tf.cast(self.X - 1, dtype=tf.int32), axis=-1, depth=flags.num_classes)
 
 		self.input_mask_1 = tf.expand_dims(self.input_mask, 2)
@@ -71,50 +71,52 @@ class CF_NADE():
 		self.time_eval = tf.sqrt(tf.losses.mean_squared_error(labels=self.true_scores , predictions=self.pred_scores, weights = self.output_mask))
 		return self.time_eval        
 
-	def time_function(input_time_stamp,output_timestamp,time_function_lambda):
-		if ((np.abs(input_time_stamp - output_timestamp) < time_function_lambda * 24*3600 * 2000):
+	def time_function(self,input_time_stamp,output_timestamp,time_function_lambda):
+		if (np.abs(input_time_stamp - output_timestamp) < time_function_lambda * 24*3600 * 2000):
 			return 1
 		else:
 			return 0            
     
-	def apply_time_function(input_mask,output_index,line_iter,time_stamp,flags) : #change a line
-		input_mask_nonzero = np.nonzero(input_mask,line_iter)[0]         
+	def apply_time_function(self,input_mask,output_index,line_iter,time_stamp,flags) : #change a line
+		input_mask_nonzero = np.nonzero(input_mask[line_iter,:])[0]         
 		tuned_input_mask = input_mask[line_iter]
 		for input_iter in input_mask_nonzero:
-			tuned_input_mask[input_iter] = time_function(time_stamp[line_iter,input_iter],time_stamp[line_iter,output_index],flags.time_function_lambda)
-		return tuned_input_mask       
+			tuned_input_mask[input_iter] = self.time_function(time_stamp[line_iter,input_iter],time_stamp[line_iter,output_index],flags.time_function_lambda)
+		return tuned_input_mask
     
-	def time_stamp_test(self, myData,flags,log):
-		X, output_mask, input_mask, flag, timestamp_mat  = myData.get_batch_test(512)
-		X, output_mask, input_mask = time_stamp_data_treat(X,input_mask,output_mask,timestamp_mat,flags)        
-		acc = []
-		while(flag):
-			myTimeEval = time_stamp_eval(flags);          
-			res_myTimeEval = self.sess.run(myTimeEval, feed_dict={self.X:X, self.input_mask:input_mask, self.output_mask:output_mask})
-			print ('test_acc:', res_myTimeEval)
-			acc.append(res_myTimeEval)
-			X, output_mask, input_mask, flag, timestamp_mat = myData.get_batch_test(512)
-			X, output_mask, input_mask = time_stamp_data_treat(X,input_mask,output_mask,timestamp_mat,flags) 
-		print ('final test_acc:', np.mean(acc))
-		myData.renew_test()
-		log.write(str(np.mean(acc)) + '\n')
-
 	def time_stamp_data_treat(self,X,input_mask,output_mask,time_stamp,flags):
 		Output_X = np.zeros((np.sum(output_mask), flags.movie_dim))
 		Output_input_mask = np.zeros((np.sum(output_mask), flags.movie_dim))        
 		Output_output_mask = np.zeros((np.sum(output_mask), flags.movie_dim))
-		base = 0        
-		line_counter = 0        
+		base = 0              
         #Transform data to 1 output for many inputs. Change the value for input_mask as time_stamp decided value
 		for line_iter in range(np.size(X,0)):       #for every line     
-			get_output_mask_nonzero = np.nonzero(output_mask(line_iter,:))[0] # Get all nonzero element in output_mask for this line
-			for output_iter in get_ourput_mask_nonzero: #output_iter stores the index of the movie we want to 
-				Output_input_mask[base + line_counter] = apply_time_function(input_mask,output_iter,line_iter,time_stamp,flags)   
+			get_output_mask_nonzero = np.nonzero(output_mask[line_iter,:])[0] # Get all nonzero element in output_mask for this line
+			line_counter = 0  
+			for output_iter in get_output_mask_nonzero: #output_iter stores the index of the movie we want to 
+				Output_input_mask[base + line_counter] = self.apply_time_function(input_mask,output_iter,line_iter,time_stamp,flags)   
 				Output_output_mask[base + line_counter,output_iter] = 1 
 				Output_X[base + line_counter] = X[line_iter]                
 				line_counter = line_counter + 1
 			base = base + line_counter
-		return Output_X,Output_input_mask,Output_output_mask            
+		return Output_X,Output_input_mask,Output_output_mask   
+    
+	def time_stamp_test(self, myData,flags,log):
+		X, output_mask, input_mask, flag, timestamp_mat  = myData.get_batch_test(512)
+		X, output_mask, input_mask = self.time_stamp_data_treat(X,input_mask,output_mask,timestamp_mat,flags)        
+		acc = []
+		while(flag):
+			myTimeEval = self.time_stamp_eval(flags);          
+			res_myTimeEval = self.sess.run(myTimeEval, feed_dict={self.X:X, self.input_mask:input_mask, self.output_mask:output_mask})
+			print ('test_acc:', res_myTimeEval)
+			acc.append(res_myTimeEval)
+			X, output_mask, input_mask, flag, timestamp_mat = myData.get_batch_test(512)
+			X, output_mask, input_mask = self.time_stamp_data_treat(X,input_mask,output_mask,timestamp_mat,flags) 
+		print ('final test_acc:', np.mean(acc))
+		myData.renew_test()
+		log.write(str(np.mean(acc)) + '\n')
+
+         
             
         
 	def train(self, myData, flags):
