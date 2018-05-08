@@ -76,3 +76,5 @@ weight_decay: 1.000000, learning_rate: 0.100000, weight_W: 1.000000, weight_OUT_
 1.3527038
 weight_decay: 1.000000, learning_rate: 0.001000, weight_W: 1.000000, weight_OUT_W: 0.000000
 1.0045197
+weight_decay: 1.000000, learning_rate: 0.001000, weight_W: 1.000000, weight_OUT_W: 0.000000
+1.8201001

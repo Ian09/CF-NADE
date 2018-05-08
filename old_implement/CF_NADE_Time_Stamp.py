@@ -10,13 +10,13 @@ class CF_NADE():
 		self.output_mask = tf.placeholder('float32', [None, flags.movie_dim])
 
 		self.weights = {
-		'W': tf.Variable(tf.random_normal([flags.movie_dim, flags.num_classes, flags.hidden_dim])),
-		'Output_W' : tf.Variable(tf.random_normal([flags.hidden_dim, flags.movie_dim, flags.num_classes]))
+		'W': tf.placeholder("float32",[flags.movie_dim, flags.num_classes, flags.hidden_dim]),
+		'Output_W' : tf.placeholder("float32",[flags.hidden_dim, flags.movie_dim, flags.num_classes])
 		}
 
 		self.bias = {
-	    'b_hidden':tf.Variable(tf.random_normal([flags.hidden_dim])),
-	    'b_output':tf.Variable(tf.random_normal([flags.movie_dim, flags.num_classes]))
+	    'b_hidden':tf.placeholder("float32",[flags.hidden_dim]),
+	    'b_output':tf.placeholder("float32",[flags.movie_dim, flags.num_classes])
 		}
 
 	def buildGraph(self, flags):
@@ -101,21 +101,22 @@ class CF_NADE():
 			base = base + line_counter
 		return Output_X,Output_input_mask,Output_output_mask   
     
-	def time_stamp_test(self, myData,flags,log):
+	def time_stamp_test(self, myData,flags,log,W_array,Output_W_array,B_array,Output_B_array):
 		X, output_mask, input_mask, flag, timestamp_mat  = myData.get_batch_test(512)
 		X, output_mask, input_mask = self.time_stamp_data_treat(X,input_mask,output_mask,timestamp_mat,flags)        
 		acc = []
 		while(flag):
 			myTimeEval = self.time_stamp_eval(flags);          
-			res_myTimeEval = self.sess.run(myTimeEval, feed_dict={self.X:X, self.input_mask:input_mask, self.output_mask:output_mask})
+			res_myTimeEval = self.sess.run(myTimeEval, feed_dict={self.X:X, self.input_mask:input_mask, self.output_mask:output_mask,
+                                                                 self.weights['W']:W_array,self.weights['Output_W']:Output_W_array,
+                                                                 self.bias['b_hidden']:B_array,self.bias['b_output']:Output_B_array})
 			print ('test_acc:', res_myTimeEval)
 			acc.append(res_myTimeEval)
 			X, output_mask, input_mask, flag, timestamp_mat = myData.get_batch_test(512)
 			X, output_mask, input_mask = self.time_stamp_data_treat(X,input_mask,output_mask,timestamp_mat,flags) 
 		print ('final test_acc:', np.mean(acc))
 		myData.renew_test()
-		log.write(str(np.mean(acc)) + '\n')
-
+		log.write(str(np.mean(acc)) + '\n')   
          
             
         

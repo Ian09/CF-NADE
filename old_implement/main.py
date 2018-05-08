@@ -14,12 +14,13 @@ flags.DEFINE_integer('movie_dim', 3706, 'how many movies in the dataset')
 flags.DEFINE_integer('num_classes', 5, 'score range')
 flags.DEFINE_float('learning_rate', 0.001, 'learning_rate for Adam')
 flags.DEFINE_integer('hidden_dim', 500, 'dimenstion of hidden states')
-flags.DEFINE_integer('epochs', 500, 'epochs to train')
+flags.DEFINE_integer('epochs', 1, 'epochs to train')
 flags.DEFINE_integer('test_avg_num', 1, 'how many test acc should we get to averge final test acc')
 flags.DEFINE_float('weight_decay', 1, 'weight decay for regularization')
 flags.DEFINE_float('weight_W', 1, 'weight W')
 flags.DEFINE_float('weight_OUT_W', 0, 'weight OUT_W')
 flags.DEFINE_integer('embedding_dim', 100, '')
+flags.DEFINE_float('time_function_lambda',0.2,'time function parameter');
 flags.DEFINE_integer('seq_len', 20, '')
 FLAGS = flags.FLAGS
 
