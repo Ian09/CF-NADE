@@ -48,6 +48,6 @@ def load(seed = 1234):
     
 if __name__ == '__main__':
     
-    print 123
+    print(123)
     
     

@@ -11,7 +11,8 @@ import numpy as np
 from blocks.bricks import Rectifier, Softmax, Identity, NDimensionalSoftmax, Tanh, Logistic, Softplus
 from blocks.initialization import Constant, Uniform
 from blocks.bricks import Initializable, Sequence, Feedforward, Linear, Brick
-from blocks.bricks import shared_floatx_nans, add_role
+from blocks.utils import shared_floatx_nans
+from blocks.roles import add_role
 from blocks.roles import WEIGHT, BIAS
 from blocks.bricks.base import application
 from toolz import interleave
@@ -143,6 +144,7 @@ class Trainer_MovieLensTransformer(Transformer):
         
         cnt = 0
         for rat in ratings:
+            print (np.array(ratings).shape)
             nonzero_id = rat.nonzero()[0]
             if len(nonzero_id) == 0:
                 continue
@@ -199,12 +201,12 @@ class TensorLinear(Initializable):
         self.weights_init.initialize(Q, self.rng)
 
     @application(inputs=['input_'], outputs=['output'])
-    def apply(self, input_):
-        W, b, Q = self.parameters
+    def apply(self, input_): # dim(input) = batch_size * user_num * score
+        W, b, Q = self.parameters # dim(w) = user_num * score * hidden_num
 #         input_ = input_ / (T.sum(input_, axis=(1,2))[:, None, None]+1e-6)
         output_ = T.tensordot(input_, W, axes=[[1, 2], [0, 1]]) + b
         input_mask = T.sum(input_, axis = 2)
-        output_masked = T.dot(input_mask, Q) 
+        output_masked = T.dot(input_mask, Q) #dim(output) = batch_size * hidden_num
         output = output_ + output_masked
 #         output = output / (T.sum(input_, axis=(1,2))[:,None] + 1)
         return output
@@ -226,7 +228,7 @@ class TensorLinear_inverse(Initializable):
         self.output_dim1 = output_dim1
         
     def __allocate(self, input_dim, output_dim0, output_dim1):
-        W = shared_floatx_nans((input_dim, output_dim0, output_dim1), name='W')
+        W = shared_floatx_nans((input_dim, output_dim0, output_dim1), name='W') # hidden_num * user_num * score
         add_role(W, WEIGHT)
         self.parameters.append(W)
         self.add_auxiliary_variable(W.norm(2), name='W_norm')
@@ -246,7 +248,7 @@ class TensorLinear_inverse(Initializable):
     @application(inputs=['input_'], outputs=['output'])
     def apply(self, input_):
         W, b = self.parameters
-        output = T.tensordot(input_, W, axes=[[1], [0]]) + b
+        output = T.tensordot(input_, W, axes=[[1], [0]]) + b #batch_size * hidden_num
         return output
     
     def get_dim(self, name):
@@ -424,7 +426,7 @@ class tabula_NADE(Sequence, Initializable, Feedforward):
         self.linear_transformations = []
         self.linear_transformations.append(TensorLinear(input_dim0=self.input_dim0,
                                                         input_dim1=self.input_dim1,
-                                                        output_dim=self.other_dims[0],
+                                                        output_dim=self.other_dims[0], #500
                                                         batch_size=batch_size)
                                            )
         self.linear_transformations.extend([Linear(name='linear_{}'.format(i),
@@ -582,11 +584,12 @@ if __name__ == '__main__':
                                                     )
                                        )
     
-    rating_freq = np.zeros((6040, 5))
+    rating_freq = np.zeros((6040, 5)) #users' rating records
     init_b = np.zeros((6040, 5))
     for batch in valid_monitor_stream.get_epoch_iterator():
-        inp_r, out_r, inp_m, out_m = batch
+        inp_r, out_r, inp_m, out_m = batch # dim(inp_r) = (batch_size , 6040, 5), user_num = 6040, movie_num = 3706
         rating_freq += inp_r.sum(axis=0)
+    #print (rating_freq[:10])
     
     log_rating_freq = np.log(rating_freq + 1e-8)
     log_rating_freq_diff = np.diff(log_rating_freq, axis=1)
@@ -617,7 +620,7 @@ if __name__ == '__main__':
     NADE_CF_model = tabula_NADE(activations=layers_act,
                                 input_dim0=input_dim0,
                                 input_dim1=input_dim1,
-                                other_dims=hidden_size,
+                                other_dims=hidden_size, 
                                 batch_size=batch_size,
                                 weights_init=Uniform(std=0.05),
                                 biases_init=Constant(0.0)
@@ -701,6 +704,7 @@ if __name__ == '__main__':
 #                                 outputs=[predicted_ratings,training_cost, nll, nll_item_ratings, cost_ordinal_1N, cost_ordinal_N1, prob_item_ratings])
     f_monitor = theano.function(inputs=[input_ratings],
                                 outputs=[predicted_ratings])
+
     nb_of_epocs_without_improvement = 0
     best_valid_error = np.Inf
     epoch = 0
@@ -713,7 +717,7 @@ if __name__ == '__main__':
     lr_tracer = []
     rate_score = np.array([1, 2, 3, 4, 5], np.float32)
     while(epoch < n_iter and nb_of_epocs_without_improvement < look_ahead):        
-        print 'Epoch {0}'.format(epoch)
+        print('Epoch {0}'.format(epoch))
         epoch += 1
         start_time_epoch = t.time()
         cost_train = []
@@ -724,6 +728,7 @@ if __name__ == '__main__':
         for batch in train_loop_stream.get_epoch_iterator():
             
             inp_r, out_r, inp_m, out_m = batch
+            #print(inp_r.shape, out_r.shape, inp_m.shape, out_m.shape)
             train_t = t.time()
             cost_value = f_get_grad(inp_r, inp_m, out_r, out_m)
             train_time += t.time() - train_t
@@ -734,6 +739,7 @@ if __name__ == '__main__':
                 f_update_parameters(lr)
             f_update_polyak()
             pred_ratings = f_monitor(inp_r)
+            #print (np.array(pred_ratings).shape)
             true_r = out_r.argmax(axis=2) + 1
             pred_r = (pred_ratings[0] * rate_score[np.newaxis, np.newaxis, :]).sum(axis=2)
             pred_r[:, new_items] = 3
@@ -753,10 +759,10 @@ if __name__ == '__main__':
         n_samples = np.array(n_sample_train).sum()
         train_RMSE = np.sqrt(squared_error_ / (n_samples * 1.0 + 1e-8))
         
-        print '\tTraining   ...',
-        print 'Train     :', "RMSE: {0:.6f}".format(train_RMSE), " Cost Error: {0:.6f}".format(cost_train), "Train Time: {0:.6f}".format(train_time), get_done_text(start_time_epoch)
+        print('\tTraining   ...', end=' ')
+        print('Train     :', "RMSE: {0:.6f}".format(train_RMSE), " Cost Error: {0:.6f}".format(cost_train), "Train Time: {0:.6f}".format(train_time), get_done_text(start_time_epoch))
         
-        print '\tValidating ...',
+        print('\tValidating ...', end=' ')
         start_time = t.time()
         squared_error_valid = []
         n_sample_valid = []
@@ -783,7 +789,7 @@ if __name__ == '__main__':
         squared_error_ = np.array(squared_error_valid).sum()
         n_samples = np.array(n_sample_valid).sum()
         valid_RMSE = np.sqrt(squared_error_ / (n_samples * 1.0 + 1e-8))
-        print 'Validation:', " RMSE: {0:.6f}".format(valid_RMSE) , "Valid Time: {0:.6f}".format(valid_time), get_done_text(start_time),
+        print('Validation:', " RMSE: {0:.6f}".format(valid_RMSE) , "Valid Time: {0:.6f}".format(valid_time), get_done_text(start_time), end=' ')
         if valid_RMSE < best_valid_error:
             best_epoch = epoch
             nb_of_epocs_without_improvement = 0
@@ -794,7 +800,7 @@ if __name__ == '__main__':
             
             best_model = cp.deepcopy(NADE_CF_model)
             best_polyak = cp.deepcopy(shared_polyak)
-            print '\n\n Got a good one'
+            print('\n\n Got a good one')
         else:
             nb_of_epocs_without_improvement += 1
             if Optimizer == 'Adadelta':
@@ -802,11 +808,11 @@ if __name__ == '__main__':
             elif nb_of_epocs_without_improvement == look_ahead and lr > 1e-5:
                 nb_of_epocs_without_improvement = 0
                 lr /= 4 
-                print "learning rate is now %s" % lr 
+                print("learning rate is now %s" % lr) 
         lr_tracer.append(lr)
                 
                 
-    print '\n### Training, n_layers=%d' % (len(hidden_size)), get_done_text(start_training_time)
+    print('\n### Training, n_layers=%d' % (len(hidden_size)), get_done_text(start_training_time))
     
     best_y = best_model.apply(input_ratings_cum)
     best_y_cum = T.extra_ops.cumsum(best_y, axis=2)
@@ -814,7 +820,7 @@ if __name__ == '__main__':
     f_monitor_best = theano.function(inputs=[input_ratings],
                                 outputs=[best_predicted_ratings])
     
-    print '\tTesting ...',
+    print('\tTesting ...', end=' ')
     start_time = t.time()
     squared_error_test = []
     n_sample_test = []
@@ -839,7 +845,7 @@ if __name__ == '__main__':
     squared_error_ = np.array(squared_error_test).sum()
     n_samples = np.array(n_sample_test).sum()
     test_RMSE = np.sqrt(squared_error_ / (n_samples * 1.0 + 1e-8))
-    print 'Test:', " RMSE: {0:.6f}".format(test_RMSE) , "Test Time: {0:.6f}".format(test_time), get_done_text(start_time),
+    print('Test:', " RMSE: {0:.6f}".format(test_RMSE) , "Test Time: {0:.6f}".format(test_time), get_done_text(start_time), end=' ')
     
     f = open(os.path.join(output_path, 'Reco_NADE_masked_directly_itembased.txt'), 'a')
     to_write = [str(test_RMSE), str(best_valid_error), str(best_epoch)] + sys.argv[:-1]
@@ -847,7 +853,7 @@ if __name__ == '__main__':
     f.write(line)
     f.close()
     
-    print '\tTesting with polyak parameters...',
+    print('\tTesting with polyak parameters...', end=' ')
     best_param_list = []
     [best_param_list.extend(p.parameters) for p in best_model.children]
     f_replace = polyak_replace(best_param_list, best_polyak)
@@ -855,7 +861,7 @@ if __name__ == '__main__':
     cc = 0
     for pp in best_polyak:
         pp_value = pp.get_value()
-        np.save('/tmp/cfnade/%d'%cc, pp_value)
+        np.save('./tmp/cfnade/%d'%cc, pp_value)
         cc+=1
     
     
@@ -883,7 +889,7 @@ if __name__ == '__main__':
     squared_error_ = np.array(squared_error_test).sum()
     n_samples = np.array(n_sample_test).sum()
     test_RMSE = np.sqrt(squared_error_ / (n_samples * 1.0 + 1e-8))
-    print 'Test:', " RMSE: {0:.6f}".format(test_RMSE) , "Test Time: {0:.6f}".format(test_time), get_done_text(start_time),
+    print('Test:', " RMSE: {0:.6f}".format(test_RMSE) , "Test Time: {0:.6f}".format(test_time), get_done_text(start_time), end=' ')
     
     f = open(os.path.join(output_path, 'Reco_NADE_masked_directly_itembased.txt'), 'a')
     to_write = [str(test_RMSE), str(best_valid_error), str(best_epoch)] + sys.argv[:-1] + ['polyak']

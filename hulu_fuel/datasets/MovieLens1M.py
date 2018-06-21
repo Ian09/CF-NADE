@@ -33,7 +33,7 @@ class foo(object):
 if __name__ == '__main__':
     
     f = foo()
-    print f.voltage
-    print 123
+    print(f.voltage)
+    print(123)
     
     

@@ -43,10 +43,10 @@ def write_movie_data(ratings, data_path, output, seed):
     cnt_u = 0
     cnt_i = 0
     for user_id, mov_id, rating, _ in ratings:
-        if user_id not in users.keys():
+        if user_id not in list(users.keys()):
             users[user_id] = cnt_u
             cnt_u += 1
-        if mov_id not in movs.keys():
+        if mov_id not in list(movs.keys()):
             movs[mov_id] = cnt_i
             cnt_i += 1
     n_users = len(users)
@@ -163,12 +163,12 @@ def write_movie_data(ratings, data_path, output, seed):
     f.close()
     
     f = open(os.path.join(output, 'user_dict'), 'wb')
-    import cPickle
-    cPickle.dump(users, f)
+    import pickle
+    pickle.dump(users, f)
     f.close()
     
     f = open(os.path.join(output, 'movie_dict'), 'wb')
-    cPickle.dump(movs, f)
+    pickle.dump(movs, f)
     f.close()
     
     
@@ -183,28 +183,28 @@ def main(data_path, output, seed):
     write_movie_data(ratings, data_path, output, seed)
 
 if __name__ == "__main__":
-#     main("/Users/yin.zheng/Downloads/ml-1m",
-#          "/Users/yin.zheng/ml_datasets/MovieLens1M-shuffle-itembased-0",
+#     main("./../ml-1m",
+#          "./../ml_datasets/MovieLens1M-shuffle-itembased-0",
 #          1234)
-    print '1'
-    main("/Users/yin.zheng/Downloads/ml-1m",
-         "/Users/yin.zheng/ml_datasets/MovieLens1M-shuffle-itembased-1",
+    print('1')
+    main("./../ml-1m",
+         "./../ml_datasets/MovieLens1M-shuffle-itembased-1",
          2341)
-    print '2'
-    main("/Users/yin.zheng/Downloads/ml-1m",
-         "/Users/yin.zheng/ml_datasets/MovieLens1M-shuffle-itembased-2",
+    print('2')
+    main("./../ml-1m",
+         "./../ml_datasets/MovieLens1M-shuffle-itembased-2",
          3412)
-    print '3'
-    main("/Users/yin.zheng/Downloads/ml-1m",
-         "/Users/yin.zheng/ml_datasets/MovieLens1M-shuffle-itembased-3",
+    print('3')
+    main("./../ml-1m",
+         "./../ml_datasets/MovieLens1M-shuffle-itembased-3",
          4123)
-    print '4'
-    main("/Users/yin.zheng/Downloads/ml-1m",
-         "/Users/yin.zheng/ml_datasets/MovieLens1M-shuffle-itembased-4",
+    print('4')
+    main("./../ml-1m",
+         "./../ml_datasets/MovieLens1M-shuffle-itembased-4",
          1324)
 #     from fuel.datasets import H5PYDataset
 #     
-#     trainset = H5PYDataset(os.path.join('/Users/yin.zheng/ml_datasets/MovieLens1M-shuffle-itembased', 'movielens-1m.hdf5'),
+#     trainset = H5PYDataset(os.path.join('./../ml_datasets/MovieLens1M-shuffle-itembased', 'movielens-1m.hdf5'),
 #                            which_sets = ('train',),
 #                            load_in_memory=True,
 #                            sources=('input_ratings', 'output_ratings', 'input_masks', 'output_masks')
